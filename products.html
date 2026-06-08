@@ -207,6 +207,7 @@
     .modal-price { font-size: 22px; font-weight: 900; color: var(--navy); background: #fff2d5; padding: 8px 16px; border-radius: 12px; display: inline-block; border: 2px solid var(--navy); box-shadow: 0 2px 0 var(--navy); margin-bottom: 16px;}
     .modal-desc { font-size: 15px; line-height: 1.6; color: var(--muted); padding-top: 16px; border-top: 1px dashed rgba(45,42,74,0.2); }
   </style>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
   <!-- HEADER -->
@@ -223,9 +224,6 @@
         <ul>
           <li><a href="index.html#gt-ve-tram">Giới thiệu</a></li>
           <li><a class="active" href="products.html">Sản phẩm</a></li>
-          <li><a href="menuTramChanh.html">Menu Trạm Chanh</a></li>
-          <li><a href="menuTramSua.html">Menu Trạm Sữa</a></li>
-          <li><a href="menuTramBanh.html">Menu Trạm Bánh</a></li>
           <li><a href="index.html#danh-muc-san-pham">Danh mục</a></li>
           <li><a href="thoiGianMoCua.html">Mở cửa</a></li>
           <li><a href="lienHe.html">Liên hệ</a></li>
@@ -242,9 +240,6 @@
       <ul>
         <li><a class="drawer-item" href="index.html#gt-ve-tram"><span class="ico">🏠</span> Giới thiệu</a></li>
         <li><a class="drawer-item active" href="products.html"><span class="ico">🧺</span> Sản phẩm</a></li>
-        <li><a class="drawer-item" href="menuTramChanh.html"><span class="ico">🍋</span> Menu Trạm Chanh</a></li>
-        <li><a class="drawer-item" href="menuTramSua.html"><span class="ico">🥛</span> Menu Trạm Sữa</a></li>
-        <li><a class="drawer-item" href="menuTramBanh.html"><span class="ico">🍰</span> Menu Trạm Bánh</a></li>
         <li><a class="drawer-item" href="index.html#danh-muc-san-pham"><span class="ico">🧺</span> Danh mục</a></li>
         <li><a class="drawer-item" href="thoiGianMoCua.html"><span class="ico">⏰</span> Mở cửa</a></li>
         <li><a class="drawer-item" href="lienHe.html"><span class="ico">☎️</span> Liên hệ</a></li>
@@ -406,6 +401,7 @@
       for (const sub in groups) {
          const groupDiv = document.createElement('div');
          groupDiv.className = 'subcat-group';
+         groupDiv.setAttribute('data-aos', 'fade-up');
          groupDiv.style.gridColumn = '1 / -1';
          groupDiv.style.marginTop = '16px';
          
@@ -442,6 +438,8 @@
 
             const card = document.createElement('div');
             card.className = 'product-card';
+            card.setAttribute('data-aos', 'fade-up');
+            card.setAttribute('data-aos-delay', '100');
             card.style.cursor = 'pointer';
             card.innerHTML = `
               <img src="${imgSrc}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Trạm';">
@@ -457,6 +455,9 @@
          
          groupDiv.appendChild(subGrid);
          gridEl.appendChild(groupDiv);
+      }
+      if (window.AOS) {
+        setTimeout(() => AOS.refresh(), 100);
       }
     };
 
@@ -568,6 +569,8 @@ const closeModal = () => {
       filtersEl.innerHTML = '';
     });
   </script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 800, once: true, offset: 100 });</script>
 </body>
 </html>
 
