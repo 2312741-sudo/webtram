@@ -256,7 +256,7 @@
     
 
     <!-- Product Grid Section -->
-    <div class="product-grid" id="product-grid">
+    <div class="product-grid" id="product-grid" style="display:block;">
       <!-- Skeletons while loading -->
       <div class="skeleton skel-card"></div>
       <div class="skeleton skel-card"></div>
@@ -375,65 +375,93 @@
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
     };
 
+    
     const renderProducts = () => {
       gridEl.innerHTML = '';
       
       const filtered = currentCategory === 'all' 
         ? allProducts 
-        : allProducts.filter(p => p.category === currentCategory);
+        : allProducts.filter(p => p.category && p.category.includes(currentCategory));
 
       if (filtered.length === 0) {
-        gridEl.innerHTML = `<div class="no-products">Không tìm thấy sản phẩm nào!</div>`;
+        gridEl.innerHTML = '<div class="no-products">Không tìm thấy sản phẩm nào!</div>';
         return;
       }
 
-      filtered.forEach(product => {
-        // Handle image: Use base64 if available, otherwise try local image, fallback to placeholder
-        let imgSrc = 'https://via.placeholder.com/300x200?text=Trạm';
-        
-        if (product.imageBase64 && product.imageBase64.trim() !== '') {
-          imgSrc = `data:image/png;base64,${product.imageBase64}`;
-        } else {
-          // Attempt to use local image based on imageResourceName or normalized product name
-          const fileName = product.imageResourceName && product.imageResourceName.trim() !== '' 
-            ? product.imageResourceName 
-            : `${normalizeName(product.name)}.png`;
-          
-          // Ensure it ends with an image extension
-          const finalFileName = fileName.match(/\.(png|jpe?g|gif)$/i) ? fileName : `${fileName}.png`;
-          imgSrc = `hinhsp/${finalFileName}`;
-        }
-
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.style.cursor = 'pointer'; // Show pointer on hover
-        card.innerHTML = `
-          <img src="${imgSrc}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Trạm';">
-          <div class="product-info">
-            <div class="product-cat">${product.category || 'Trạm'}</div>
-            <h3 class="product-name">${product.name}</h3>
-            <div class="product-price">${formatPrice(product.price)}</div>
-          </div>
-        `;
-        
-        // Add click event to open modal
-        card.onclick = () => showModal(product, imgSrc);
-        
-        gridEl.appendChild(card);
+      const groups = {};
+      filtered.forEach(p => {
+         const sub = p.subCategory || 'Khác';
+         if(!groups[sub]) groups[sub] = [];
+         groups[sub].push(p);
       });
+
+      for (const sub in groups) {
+         const groupDiv = document.createElement('div');
+         groupDiv.className = 'subcat-group';
+         groupDiv.style.gridColumn = '1 / -1';
+         groupDiv.style.marginTop = '16px';
+         
+         const title = document.createElement('h3');
+         title.style.fontSize = '24px';
+         title.style.color = 'var(--navy)';
+         title.style.borderBottom = '2px dashed var(--navy)';
+         title.style.paddingBottom = '8px';
+         title.style.marginBottom = '20px';
+         title.style.fontFamily = "'Merriweather', serif";
+         title.textContent = sub;
+         groupDiv.appendChild(title);
+         
+         const subGrid = document.createElement('div');
+         subGrid.className = 'product-grid subcat-grid';
+         subGrid.style.display = 'grid';
+         subGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(260px, 1fr))';
+         subGrid.style.gap = '24px';
+         subGrid.style.marginBottom = '40px';
+         
+         groups[sub].forEach(product => {
+            let imgSrc = 'https://via.placeholder.com/300x200?text=Trạm';
+            if (product.imageBase64 && product.imageBase64.trim() !== '') {
+              imgSrc = `data:image/png;base64,${product.imageBase64}`;
+            } else {
+              const fileName = product.imageResourceName && product.imageResourceName.trim() !== '' 
+                ? product.imageResourceName 
+                : `${normalizeName(product.name)}.png`;
+              const finalFileName = fileName.match(/\.(png|jpe?g|gif)$/i) ? fileName : `${fileName}.png`;
+              imgSrc = `hinhsp/${finalFileName}`;
+            }
+            
+            let priceStr = product.multiPrice ? product.multiPrice : formatPrice(product.price);
+
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.style.cursor = 'pointer';
+            card.innerHTML = `
+              <img src="${imgSrc}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Trạm';">
+              <div class="product-info">
+                <div class="product-cat">${product.category || 'Trạm'}</div>
+                <h3 class="product-name">${product.name}</h3>
+                <div class="product-price">${priceStr}</div>
+              </div>
+            `;
+            card.onclick = () => showModal(product, imgSrc, priceStr);
+            subGrid.appendChild(card);
+         });
+         
+         groupDiv.appendChild(subGrid);
+         gridEl.appendChild(groupDiv);
+      }
     };
 
     // Modal Logic
     const modal = document.getElementById('product-modal');
     const modalClose = document.getElementById('modal-close');
     
-    const showModal = (product, imgSrc) => {
+    const showModal = (product, imgSrc, priceStr) => {
       document.getElementById('modal-img').src = imgSrc;
       document.getElementById('modal-cat').textContent = product.category || 'Trạm';
       document.getElementById('modal-name').textContent = product.name;
-      document.getElementById('modal-price').textContent = formatPrice(product.price);
+      document.getElementById('modal-price').textContent = priceStr || formatPrice(product.price);
       
-      // Some products might have a note/description
       const descEl = document.getElementById('modal-desc');
       if (product.note && product.note.trim() !== '') {
         descEl.textContent = product.note;
@@ -444,10 +472,9 @@
       }
       
       modal.classList.add('show');
-      document.body.style.overflow = 'hidden'; // Prevent background scroll
+      document.body.style.overflow = 'hidden';
     };
-
-    const closeModal = () => {
+const closeModal = () => {
       modal.classList.remove('show');
       document.body.style.overflow = '';
     };

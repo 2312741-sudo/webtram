@@ -174,6 +174,7 @@
     .drawer-close{ background:linear-gradient(180deg,#fffdf7,#fff3d9); }
     @media (max-width:420px){ .drawer-nav{padding:14px} .drawer-item{padding:11px 12px} }
   </style>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
   <!-- HEADER -->
@@ -243,7 +244,7 @@
   </section>
 
   <main class="container">
-    <section id="gt-ve-tram" class="section-card intro">
+    <section id="gt-ve-tram" data-aos="fade-up" class="section-card intro">
       <h3 class="section-title">Giới thiệu về Trạm</h3>
       <p><strong>Là sản phẩm từ sữa tươi và trái cây tươi.</strong></p>
       <p class="poem">Trạm tui tròn trịa dễ thương 😝,
@@ -260,7 +261,7 @@ Không phải nước mắt, là trà đó nha😋!</p>
       </details>
     </section>
 
-    <section id="danh-muc-san-pham" class="section-card" style="margin-top:18px;">
+    <section id="danh-muc-san-pham" data-aos="fade-up" class="section-card" style="margin-top:18px;">
       <h3 class="section-title">Danh Mục Sản Phẩm</h3>
       <p>Trạm mang đến cho bạn đa dạng các lựa chọn từ thức uống thanh mát, sữa tươi dinh dưỡng đến các loại bánh ngọt hấp dẫn.</p>
       <div style="display:flex; gap:16px; margin-top:20px; flex-wrap:wrap;">
@@ -272,17 +273,17 @@ Không phải nước mắt, là trà đó nha😋!</p>
     </section>
   </main>
 
-  <footer>
+  <footer data-aos="fade-up">
     <div class="container footer-inner">
       <div class="footer-grid">
-        <div class="section-card">
+        <div class="section-card" data-aos="fade-up"">
           <h3 class="section-title" style="margin-bottom:6px">Liên hệ</h3>
           <p>📍 <strong>TRẠM CHANH</strong> — 09 Hải Thượng, Phường Cam Ly, Lâm Đồng</p>
           <p>📍 <strong>TRẠM SỮA</strong> — 44 Yersin, Phường Xuân Hương, Lâm Đồng</p>
           <p>📍 <strong>TRẠM BÁNH</strong> — 46 Yersin, Phường Xuân Hương, Lâm Đồng</p>
           <p>📞 <a href="tel:0941668405">094 166 8405</a></p>
         </div>
-        <div class="section-card">
+        <div class="section-card" data-aos="fade-up"">
           <h3 class="section-title" style="margin-bottom:6px">Bản đồ</h3>
           <div class="map-grid">
             <iframe src="https://maps.app.goo.gl/mp5EodZBvcKLMJpr5" allowfullscreen loading="lazy" title="Trạm Chanh"></iframe>
@@ -345,6 +346,8 @@ Không phải nước mắt, là trà đó nha😋!</p>
       window.addEventListener('orientationchange', setHeaderHeight);
     })();
   </script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 800, once: true, offset: 100 });</script>
 </body>
 </html>
 
