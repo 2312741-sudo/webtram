@@ -220,7 +220,7 @@
         <ul>
           <li><a href="index.html#gt-ve-tram">Giới thiệu</a></li>
           <li><a class="active" href="products.html">Sản phẩm</a></li>
-          <li><a class="active" href="menuTramChanh.html">Menu Trạm Chanh</a></li>
+          <li><a href="menuTramChanh.html">Menu Trạm Chanh</a></li>
           <li><a href="menuTramSua.html">Menu Trạm Sữa</a></li>
           <li><a href="menuTramBanh.html">Menu Trạm Bánh</a></li>
           <li><a href="index.html#danh-muc-san-pham">Danh mục</a></li>
@@ -237,14 +237,14 @@
     <nav class="drawer-nav" aria-label="Menu di động">
       <div class="menu-head"><span class="dot"></span> Menu</div>
       <ul>
-        <li><a class="drawer-item active" href="index.html#gt-ve-tram"><span class="ico">🏠</span> Giới thiệu</a></li>
+        <li><a class="drawer-item" href="index.html#gt-ve-tram"><span class="ico">🏠</span> Giới thiệu</a></li>
         <li><a class="drawer-item active" href="products.html"><span class="ico">🧺</span> Sản phẩm</a></li>
-        <li><a class="drawer-item active" href="menuTramChanh.html"><span class="ico">🍋</span> Menu Trạm Chanh</a></li>
-        <li><a class="drawer-item active" href="menuTramSua.html"><span class="ico">🥛</span> Menu Trạm Sữa</a></li>
-        <li><a class="drawer-item active" href="menuTramBanh.html"><span class="ico">🍰</span> Menu Trạm Bánh</a></li>
-        <li><a class="drawer-item active" href="index.html#danh-muc-san-pham"><span class="ico">🧺</span> Danh mục</a></li>
-        <li><a class="drawer-item active" href="thoiGianMoCua.html"><span class="ico">⏰</span> Mở cửa</a></li>
-        <li><a class="drawer-item active" href="lienHe.html"><span class="ico">☎️</span> Liên hệ</a></li>
+        <li><a class="drawer-item" href="menuTramChanh.html"><span class="ico">🍋</span> Menu Trạm Chanh</a></li>
+        <li><a class="drawer-item" href="menuTramSua.html"><span class="ico">🥛</span> Menu Trạm Sữa</a></li>
+        <li><a class="drawer-item" href="menuTramBanh.html"><span class="ico">🍰</span> Menu Trạm Bánh</a></li>
+        <li><a class="drawer-item" href="index.html#danh-muc-san-pham"><span class="ico">🧺</span> Danh mục</a></li>
+        <li><a class="drawer-item" href="thoiGianMoCua.html"><span class="ico">⏰</span> Mở cửa</a></li>
+        <li><a class="drawer-item" href="lienHe.html"><span class="ico">☎️</span> Liên hệ</a></li>
       </ul>
     </nav>
     <button class="drawer-close" aria-label="Đóng menu">✕</button>
@@ -253,7 +253,12 @@
   <main class="container">
     <h2 class="page-title">Khám Phá Các Món Ngon</h2>
     
-    
+    <!-- Filter Section -->
+    <div class="filters" id="category-filters">
+      <button class="filter-btn skeleton skel-btn"></button>
+      <button class="filter-btn skeleton skel-btn"></button>
+      <button class="filter-btn skeleton skel-btn"></button>
+    </div>
 
     <!-- Product Grid Section -->
     <div class="product-grid" id="product-grid">
@@ -359,7 +364,7 @@
     const dbRef = ref(getDatabase(app));
 
     let allProducts = [];
-    let currentCategory = 'Tr?m Chanh';
+    let currentCategory = 'all';
 
     // Format currency
     const formatPrice = (price) => {
@@ -525,7 +530,7 @@
         }
       }
 
-      
+      renderFilters(categories);
       renderProducts();
     }).catch((error) => {
       console.error(error);
@@ -535,7 +540,5 @@
   </script>
 </body>
 </html>
-
-
 
 

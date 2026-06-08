@@ -3,23 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Menu Trạm Sữa — Trạm</title>
+  <meta name="description" content="Trạm - Sản phẩm động" />
+  <title>Sản phẩm — Trạm</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Merriweather:wght@700;900&display=swap" rel="stylesheet" />
   <style>
     :root{
       --paper:#F6EFDF; --paper-ink:#E9E1CF; --ink:#1C1A2D;
-      --navy:#2D2A4A; --maroon:#7E2930; --maroon-d:#5C1F24; --mustard:#E3A94C; --teal:#1E8E87;
+      --navy:#2D2A4A; --maroon:#7E2930; --maroon-d:#5C1F24;
+      --mustard:#E3A94C; --teal:#1E8E87; --muted:#5D5B63;
       --radius:18px; --shadow:0 10px 30px rgba(45,42,74,.15), 0 2px 8px rgba(45,42,74,.10);
       --header-h:72px; --drawer-gap:8px;
     }
     *{box-sizing:border-box} html{scroll-behavior:smooth}
-    body{margin:0;background:var(--paper);color:var(--ink);font-family:"Be Vietnam Pro",system-ui}
-    h1,h2,h3{font-family:"Merriweather",Georgia,serif}
+    body{
+      margin:0; color:var(--ink);
+      font-family:"Be Vietnam Pro",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      line-height:1.65;
+      background:
+        radial-gradient(400px 200px at 15% -10%, rgba(227,169,76,.25), transparent 70%),
+        radial-gradient(500px 300px at 110% 0%, rgba(30,142,135,.2), transparent 60%),
+        repeating-radial-gradient(circle at 10% 10%, rgba(0,0,0,.05) 0 1px, transparent 1px 12px),
+        radial-gradient(1000px 800px at 50% 0%, var(--paper-ink), transparent 70%),
+        var(--paper);
+    }
     a{color:inherit;text-decoration:none} img{max-width:100%;display:block;height:auto}
+    h1,h2,h3{font-family:"Merriweather",Georgia,serif;letter-spacing:.4px}
     .container{width:min(1160px,92%);margin-inline:auto}
 
-    .site-header{position:sticky;top:0;z-index:100;background:rgba(246,239,223,.95);border-bottom:2px solid var(--navy);backdrop-filter:blur(6px);box-shadow:0 6px 12px rgba(45,42,74,.06)}
+    /* Header */
+    .site-header{
+      position:sticky; top:0; z-index:100;
+      background:rgba(246,239,223,.95);
+      border-bottom:2px solid var(--navy);
+      backdrop-filter:blur(6px);
+      box-shadow:0 6px 12px rgba(45,42,74,.06);
+    }
     .header-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 0}
     .brand{display:flex;gap:12px;align-items:center;min-width:0}
     .brand-logo{width:56px;height:56px;border-radius:14px;border:3px solid var(--navy);object-fit:cover;box-shadow:var(--shadow)}
@@ -27,94 +46,243 @@
     .nav-inline ul{list-style:none;display:flex;gap:10px;margin:0;padding:0}
     .nav-inline a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;font-weight:700;border:2px solid var(--navy);background:#fff7e6;box-shadow:0 2px 0 var(--navy)}
     .nav-inline a.active{background:var(--mustard);color:#2D2A4A}
-    .menu-toggle{display:none;width:44px;height:44px;border-radius:12px;border:2px solid var(--navy);background:linear-gradient(180deg,#fffdf7,#fff3d9);box-shadow:0 2px 0 var(--navy),0 8px 20px rgba(45,42,74,.08);align-items:center;justify-content:center;cursor:pointer}
-    .menu-toggle .bar{display:block;width:22px;height:2.5px;border-radius:2px;background:var(--navy);margin:3px 0;transition:.2s}
+
+    .menu-toggle{display:none;width:44px;height:44px;border-radius:10px;border:2px solid var(--navy);background:#fff7e6;box-shadow:0 2px 0 var(--navy);align-items:center;justify-content:center;cursor:pointer}
+    .menu-toggle .bar{display:block;width:22px;height:2px;background:var(--navy);margin:3px 0;transition:.2s}
     .menu-toggle[aria-expanded="true"] .bar:nth-child(1){transform:translateY(5px) rotate(45deg)}
     .menu-toggle[aria-expanded="true"] .bar:nth-child(2){opacity:0}
     .menu-toggle[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
     @media (max-width:900px){ .nav-inline{display:none} .menu-toggle{display:inline-flex} .brand-logo{width:52px;height:52px;border-width:2px} .brand-title{font-size:20px} }
 
-    .drawer{position:fixed;inset:0;z-index:120}
-    .drawer[hidden]{display:none !important}
-    .drawer-backdrop{position:fixed;left:0;right:0;bottom:0;top:calc(var(--header-h) + var(--drawer-gap));background:rgba(0,0,0,.35);z-index:1}
+    /* Drawer */
+    .drawer{ position:fixed; inset:0; z-index:120; display:block; }
+    .drawer[hidden]{ display:none !important; }
+    .drawer-backdrop{
+      position:fixed; left:0; right:0; bottom:0;
+      top:calc(var(--header-h) + var(--drawer-gap));
+      background:rgba(0,0,0,.35); z-index:1;
+    }
     .drawer-nav{
-      position:fixed;right:0;top:calc(var(--header-h) + var(--drawer-gap));
+      position:fixed; right:0;
+      top:calc(var(--header-h) + var(--drawer-gap));
       height:calc(100% - calc(var(--header-h) + var(--drawer-gap)));
       width:min(86vw,340px);
       background:linear-gradient(180deg,rgba(255,253,247,.86),rgba(255,246,220,.86));
-      -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+      backdrop-filter: blur(10px);
       border-left:2px solid var(--navy); border-top:2px solid var(--navy); border-top-left-radius:16px;
       box-shadow:0 18px 50px rgba(45,42,74,.18), 0 4px 12px rgba(45,42,74,.10);
       padding:16px; transform:translateX(100%); transition:transform .2s ease-out; overflow:auto; z-index:2;
     }
-    .drawer.open .drawer-nav{transform:translateX(0)}
-    .drawer-close{position:fixed;top:calc(var(--header-h) + var(--drawer-gap) + 10px);right:calc(min(86vw,340px) + 10px);width:40px;height:40px;border-radius:12px;border:2px solid var(--navy);background:linear-gradient(180deg,#fffdf7,#fff3d9);box-shadow:0 2px 0 var(--navy);cursor:pointer;z-index:3}
-    .drawer-nav .menu-head{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;color:var(--maroon-d);margin:2px 2px 10px;padding-bottom:8px;border-bottom:2px dashed rgba(45,42,74,.25)}
-    .drawer-nav .menu-head .dot{width:10px;height:10px;border-radius:50%;background:var(--mustard);border:2px solid var(--navy);box-shadow:0 1px 0 var(--navy)}
+    .drawer.open .drawer-nav{ transform:translateX(0) }
+    .drawer-close{
+      position:fixed; top:calc(var(--header-h) + var(--drawer-gap) + 10px); right:calc(min(86vw,340px) + 10px);
+      width:40px;height:40px;border-radius:12px;border:2px solid var(--navy);background:linear-gradient(180deg,#fffdf7,#fff3d9);box-shadow:0 2px 0 var(--navy);cursor:pointer; z-index:3;
+    }
+    .drawer-nav .menu-head{
+      display:flex;align-items:center;gap:10px; font-weight:900;letter-spacing:.4px;text-transform:uppercase; color:var(--maroon-d); margin:2px 2px 10px; padding-bottom:8px;border-bottom:2px dashed rgba(45,42,74,.25);
+    }
+    .drawer-nav .menu-head .dot{ width:10px;height:10px;border-radius:50%; background:var(--mustard);border:2px solid var(--navy);box-shadow:0 1px 0 var(--navy); }
     .drawer-nav ul{display:grid;gap:10px;margin:0;padding:0;list-style:none}
-    .drawer-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:2px solid var(--navy);background:#fff7e6;box-shadow:0 2px 0 var(--navy);font-weight:800;text-decoration:none;transition:transform .12s,box-shadow .12s,background .12s}
-    .drawer-item:hover{transform:translateY(-2px);background:#fff2d5;box-shadow:0 4px 0 var(--navy)}
-    .drawer-item .ico{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;border:2px solid var(--navy);box-shadow:0 1px 0 var(--navy);background:#fff;font-size:16px}
+    .drawer-item{
+      display:flex;align-items:center;gap:12px; padding:12px 14px;border-radius:14px; border:2px solid var(--navy); background:#fff7e6; box-shadow:0 2px 0 var(--navy); font-weight:800; transition:transform .12s, box-shadow .12s, background .12s;
+    }
+    .drawer-item:hover{transform:translateY(-2px); background:#fff2d5; box-shadow:0 4px 0 var(--navy)}
+    .drawer-item:active{transform:translateY(0); box-shadow:0 1px 0 var(--navy)}
+    .drawer-item .ico{ width:28px;height:28px;border-radius:8px;display:grid;place-items:center; border:2px solid var(--navy); box-shadow:0 1px 0 var(--navy); background:#fff; font-size:16px; }
+    .drawer-item.active{ background:var(--mustard); color:#2D2A4A; }
 
-    main{padding:22px 0}
-    .card{background:#fffef9;border:2px solid var(--navy);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
-    footer{margin-top:32px;background:rgba(246,239,223,.9);border-top:2px solid var(--navy)}
-    .footer-inner{padding:22px 0}
+    /* Footer */
+    footer{margin-top:32px;background:linear-gradient(180deg,rgba(246,239,223,1),rgba(246,239,223,.86));border-top:2px solid var(--navy)}
+    .footer-inner{padding:22px 0;display:grid;gap:18px}
+    .footer-grid{display:grid;gap:18px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .map-grid{display:grid;gap:18px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .map-grid iframe{width:100%;height:280px;border:0;border-radius:14px;border:2px solid var(--navy);box-shadow:var(--shadow)}
+    .section-card{background:#fffef9;border:2px solid var(--navy);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+    h3.section-title{margin:0 0 10px;font-size:22px;color:#2D2A4A;text-transform:uppercase}
+    @media (max-width:900px){ .map-grid{grid-template-columns:1fr} .map-grid iframe{height:260px} .footer-grid{grid-template-columns:1fr} }
     .contact-buttons{position:fixed;right:16px;bottom:80px;display:flex;flex-direction:column;gap:12px;z-index:100}
     .contact-buttons a{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;border:2px solid var(--navy);background:#fff7e6;box-shadow:var(--shadow);font-size:26px}
     .zalo-btn img{width:34px;height:34px}
+    .to-top{position:fixed;right:16px;bottom:16px;z-index:60;display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;border:2px solid var(--navy);background:#fff7e6;color:#2D2A4A;box-shadow:var(--shadow)}
+
+    /* Products Page CSS */
+    main{padding:32px 0; min-height: 60vh;}
+    .page-title {
+      font-size: 32px;
+      color: var(--maroon-d);
+      text-align: center;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Filters */
+    .filters {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px;
+      justify-content: center;
+    }
+    .filter-btn {
+      padding: 10px 20px; border-radius: 999px; font-weight: 700;
+      border: 2px solid var(--navy); background: #fffef9; color: var(--navy);
+      cursor: pointer; box-shadow: 0 4px 0 var(--navy);
+      transition: .15s ease-out; font-family: inherit; font-size: 15px;
+    }
+    .filter-btn:hover { background: #fff2d5; transform: translateY(-2px); box-shadow: 0 6px 0 var(--navy); }
+    .filter-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--navy); }
+    .filter-btn.active { background: var(--mustard); color: #2D2A4A; border-color: var(--navy); box-shadow: 0 2px 0 var(--navy); transform: translateY(2px); }
+
+    /* Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .product-card {
+      background: #fffef9; border: 2px solid var(--navy);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(45,42,74,.2); }
+    .product-img {
+      width: 100%; height: 220px; object-fit: cover;
+      border-bottom: 2px solid var(--navy);
+      background: #fdfbf5;
+    }
+    .product-info { padding: 18px; display: flex; flex-direction: column; flex: 1; }
+    .product-name { font-size: 20px; margin: 0 0 6px; font-weight: 700; color: var(--maroon-d); line-height: 1.3;}
+    .product-cat { font-size: 13px; color: var(--teal); margin-bottom: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
+    .product-price { font-size: 18px; font-weight: 900; color: var(--navy); margin-top: auto; background: #fff2d5; padding: 6px 12px; border-radius: 8px; display: inline-block; width: max-content; border: 2px solid var(--navy); box-shadow: 0 2px 0 var(--navy);}
+    
+    /* Skeleton */
+    .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border: none !important;}
+    @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    
+    .skel-card { height: 350px; border-radius: var(--radius); border: 2px solid #e0e0e0; }
+    .skel-btn { height: 42px; width: 100px; border-radius: 999px; }
+
+    /* No products message */
+    .no-products {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 600;
+      background: #fffef9; border: 2px dashed var(--navy); border-radius: var(--radius);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .modal-backdrop.show { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: #fffef9; border-radius: 24px; border: 2px solid var(--navy);
+      width: min(90%, 460px); max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(45,42,74,0.3);
+      transform: translateY(20px) scale(0.95); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+    .modal-backdrop.show .modal-content { transform: translateY(0) scale(1); }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #fff7e6; border: 2px solid var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-weight: bold; box-shadow: 0 2px 0 var(--navy);
+      z-index: 10; transition: background 0.2s;
+    }
+    .modal-close:hover { background: #fff2d5; }
+    .modal-img { width: 100%; height: 280px; object-fit: cover; border-bottom: 2px solid var(--navy); background: #fdfbf5; }
+    .modal-body { padding: 24px; }
+    .modal-cat { font-size: 14px; color: var(--teal); font-weight: 800; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .modal-name { font-size: 26px; margin: 0 0 14px; color: var(--maroon-d); line-height: 1.3; font-family: "Merriweather", serif; }
+    .modal-price { font-size: 22px; font-weight: 900; color: var(--navy); background: #fff2d5; padding: 8px 16px; border-radius: 12px; display: inline-block; border: 2px solid var(--navy); box-shadow: 0 2px 0 var(--navy); margin-bottom: 16px;}
+    .modal-desc { font-size: 15px; line-height: 1.6; color: var(--muted); padding-top: 16px; border-top: 1px dashed rgba(45,42,74,0.2); }
   </style>
 </head>
 <body>
-  <header class="site-header">
+  <!-- HEADER -->
+  <header id="top" class="site-header">
     <div class="container header-bar">
-      <a class="brand" href="index.html"><img class="brand-logo" src="519519306_122269576958024728_6134494741448327598_n.jpg" alt="Trạm"><h1 class="brand-title">Trạm</h1></a>
+      <a class="brand" href="index.html" aria-label="Trang chủ Trạm">
+        <img src="519519306_122269576958024728_6134494741448327598_n.jpg" alt="Trạm" class="brand-logo">
+        <h1 class="brand-title">Trạm</h1>
+      </a>
       <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-drawer" aria-label="Mở menu">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
       </button>
-      <nav class="nav-inline"><ul>
-        <li><a href="index.html#gt-ve-tram">Giới thiệu</a></li>
-        <li><a href="products.html">Sản phẩm</a></li>
-        <li><a href="menuTramChanh.html#Menu-tram-chanh">Menu Trạm Chanh</a></li>
-        <li><a class="active" href="#Menu-tram-sua">Menu Trạm Sữa</a></li>
-        <li><a href="index.html#danh-muc-san-pham">Danh mục</a></li>
-        <li><a href="thoiGianMoCua.html">Mở cửa</a></li>
-        <li><a href="lienHe.html">Liên hệ</a></li>
-      </ul></nav>
+      <nav class="nav-inline" aria-label="Điều hướng chính">
+        <ul>
+          <li><a href="index.html#gt-ve-tram">Giới thiệu</a></li>
+          <li><a class="active" href="products.html">Sản phẩm</a></li>
+          <li><a href="menuTramChanh.html">Menu Trạm Chanh</a></li>
+          <li><a href="menuTramSua.html">Menu Trạm Sữa</a></li>
+          <li><a href="menuTramBanh.html">Menu Trạm Bánh</a></li>
+          <li><a href="index.html#danh-muc-san-pham">Danh mục</a></li>
+          <li><a href="thoiGianMoCua.html">Mở cửa</a></li>
+          <li><a href="lienHe.html">Liên hệ</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
+  <!-- Drawer -->
   <div id="mobile-drawer" class="drawer" hidden>
     <div class="drawer-backdrop" tabindex="-1"></div>
     <nav class="drawer-nav" aria-label="Menu di động">
       <div class="menu-head"><span class="dot"></span> Menu</div>
       <ul>
-        <li><a class="drawer-item" href="index.html#gt-ve-tram"><span class="ico">🏠</span> Giới thiệu</a></li>
+        <li><a class="drawer-item active" href="index.html#gt-ve-tram"><span class="ico">🏠</span> Giới thiệu</a></li>
         <li><a class="drawer-item active" href="products.html"><span class="ico">🧺</span> Sản phẩm</a></li>
-        <li><a class="drawer-item" href="menuTramChanh.html#Menu-tram-chanh"><span class="ico">🍋</span> Menu Trạm Chanh</a></li>
-        <li><a class="drawer-item" href="menuTramSua.html#Menu-tram-sua"><span class="ico">🥛</span> Menu Trạm Sữa</a></li>
-        <li><a class="drawer-item" href="index.html#danh-muc-san-pham"><span class="ico">🧺</span> Danh mục</a></li>
-        <li><a class="drawer-item" href="thoiGianMoCua.html"><span class="ico">⏰</span> Mở cửa</a></li>
-        <li><a class="drawer-item" href="lienHe.html"><span class="ico">☎️</span> Liên hệ</a></li>
+        <li><a class="drawer-item active" href="menuTramChanh.html"><span class="ico">🍋</span> Menu Trạm Chanh</a></li>
+        <li><a class="drawer-item active" href="menuTramSua.html"><span class="ico">🥛</span> Menu Trạm Sữa</a></li>
+        <li><a class="drawer-item active" href="menuTramBanh.html"><span class="ico">🍰</span> Menu Trạm Bánh</a></li>
+        <li><a class="drawer-item active" href="index.html#danh-muc-san-pham"><span class="ico">🧺</span> Danh mục</a></li>
+        <li><a class="drawer-item active" href="thoiGianMoCua.html"><span class="ico">⏰</span> Mở cửa</a></li>
+        <li><a class="drawer-item active" href="lienHe.html"><span class="ico">☎️</span> Liên hệ</a></li>
       </ul>
     </nav>
     <button class="drawer-close" aria-label="Đóng menu">✕</button>
   </div>
 
   <main class="container">
-    <section id="Menu-tram-sua" class="card">
-      <h2 style="margin-top:0">Menu Trạm Sữa</h2>
-      <img src="z6978373565761_636a357328c93843421f709b37874917.jpg" alt="Menu Trạm Sữa" title="Menu Trạm Sữa" loading="lazy" decoding="async">
-      <p style="margin-top:10px"><a href="#top">↑ Trở về đầu trang</a></p>
-    </section>
+    <h2 class="page-title">Khám Phá Các Món Ngon</h2>
+    
+    
+
+    <!-- Product Grid Section -->
+    <div class="product-grid" id="product-grid">
+      <!-- Skeletons while loading -->
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+      <div class="skeleton skel-card"></div>
+    </div>
   </main>
 
   <footer>
     <div class="container footer-inner">
-      <p>Bản quyền &copy; thuộc về Trạm.</p>
-      <p>📍 09 Hải Thượng, Cam Ly, Lâm Đồng</p>
-      <p>📍 44 Yersin, Xuân Hương, Lâm Đồng</p>
-      <p>📞 <a href="tel:0941668405">094 166 8405</a></p>
+      <div class="footer-grid">
+        <div class="section-card">
+          <h3 class="section-title" style="margin-bottom:6px">Liên hệ</h3>
+          <p>📍 <strong>TRẠM CHANH:</strong> 09 Hải Thượng, Cam Ly, Lâm Đồng</p>
+          <p>📍 <strong>TRẠM SỮA:</strong> 44 Yersin, Xuân Hương, Lâm Đồng</p>
+          <p>📍 <strong>TRẠM BÁNH:</strong> 46 Yersin, Xuân Hương, Lâm Đồng</p>
+          <p>📞 <a href="tel:0941668405">094 166 8405</a></p>
+        </div>
+        <div class="section-card">
+          <h3 class="section-title" style="margin-bottom:6px">Bản đồ</h3>
+          <div class="map-grid">
+            <iframe src="https://maps.app.goo.gl/mp5EodZBvcKLMJpr5" allowfullscreen loading="lazy" title="Trạm Chanh"></iframe>
+            <iframe src="https://maps.app.goo.gl/pxAqwYU1uhAjr6fr9" allowfullscreen loading="lazy" title="Trạm Sữa"></iframe>
+          </div>
+        </div>
+      </div>
     </div>
   </footer>
 
@@ -124,18 +292,250 @@
       <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
     </a>
   </div>
+  <a class="to-top" href="#top" aria-label="Lên đầu trang">⬆️</a>
 
+  <!-- Product Detail Modal -->
+  <div class="modal-backdrop" id="product-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">✕</button>
+      <img src="" alt="" class="modal-img" id="modal-img">
+      <div class="modal-body">
+        <div class="modal-cat" id="modal-cat"></div>
+        <h3 class="modal-name" id="modal-name"></h3>
+        <div class="modal-price" id="modal-price"></div>
+        <div class="modal-desc" id="modal-desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Drawer Script -->
   <script>
-    (function(){const h=document.querySelector('.site-header');function setH(){if(!h)return;document.documentElement.style.setProperty('--header-h',h.offsetHeight+'px')}window.addEventListener('load',setH);window.addEventListener('resize',setH);window.addEventListener('orientationchange',setH)})();
     (function(){
-      const btn=document.querySelector('.menu-toggle'),drawer=document.getElementById('mobile-drawer'),panel=drawer?.querySelector('.drawer-nav'),backdrop=drawer?.querySelector('.drawer-backdrop'),closeBtn=drawer?.querySelector('.drawer-close');
-      if(!btn||!drawer||!panel)return;
-      function open(){drawer.hidden=false;requestAnimationFrame(()=>drawer.classList.add('open'));btn.setAttribute('aria-expanded','true');document.body.style.overflow='hidden'}
-      function close(){drawer.classList.remove('open');btn.setAttribute('aria-expanded','false');document.body.style.overflow='';setTimeout(()=>{drawer.hidden=true},180)}
-      btn.addEventListener('click',()=>btn.getAttribute('aria-expanded')==='true'?close():open());backdrop?.addEventListener('click',close);closeBtn?.addEventListener('click',close);panel.addEventListener('click',e=>{if(e.target.closest('a'))close()});window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!drawer.hidden)close()})
+      const btn = document.querySelector('.menu-toggle');
+      const drawer = document.getElementById('mobile-drawer');
+      const panel = drawer?.querySelector('.drawer-nav');
+      const backdrop = drawer?.querySelector('.drawer-backdrop');
+      const closeBtn = drawer?.querySelector('.drawer-close') || document.querySelector('.drawer-close');
+      if(!btn || !drawer || !panel) return;
+
+      function open(){
+        drawer.hidden = false;
+        requestAnimationFrame(()=> drawer.classList.add('open'));
+        btn.setAttribute('aria-expanded','true');
+        document.body.style.overflow='hidden';
+      }
+      function close(){
+        drawer.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+        document.body.style.overflow='';
+        setTimeout(()=>{ drawer.hidden = true; }, 180);
+      }
+
+      btn.addEventListener('click', ()=> (btn.getAttribute('aria-expanded')==='true') ? close() : open());
+      closeBtn?.addEventListener('click', close);
+      backdrop?.addEventListener('click', close);
+      panel.addEventListener('click', e=>{ if(e.target.closest('a')) close(); });
+      window.addEventListener('keydown', e=>{ if(e.key==='Escape' && !drawer.hidden) close(); });
     })();
+  </script>
+
+  <!-- Firebase Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDB-1pIozgiG-e9uAXzUXcfmMUNi-I6o7w",
+      authDomain: "tramapp-65493.firebaseapp.com",
+      databaseURL: "https://tramapp-65493-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tramapp-65493",
+      storageBucket: "tramapp-65493.firebasestorage.app",
+      messagingSenderId: "258970090066",
+      appId: "1:258970090066:web:1bfc4c2cee6abbc60c3d8b",
+      measurementId: "G-QNQFQC17F5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const dbRef = ref(getDatabase(app));
+
+    let allProducts = [];
+    let currentCategory = 'Tr?m S?a';
+
+    // Format currency
+    const formatPrice = (price) => {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+    };
+
+    // DOM Elements
+    const gridEl = document.getElementById('product-grid');
+    const filtersEl = document.getElementById('category-filters');
+
+    const normalizeName = (str) => {
+      if (!str) return '';
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+    };
+
+    const renderProducts = () => {
+      gridEl.innerHTML = '';
+      
+      const filtered = currentCategory === 'all' 
+        ? allProducts 
+        : allProducts.filter(p => p.category === currentCategory);
+
+      if (filtered.length === 0) {
+        gridEl.innerHTML = `<div class="no-products">Không tìm thấy sản phẩm nào!</div>`;
+        return;
+      }
+
+      filtered.forEach(product => {
+        // Handle image: Use base64 if available, otherwise try local image, fallback to placeholder
+        let imgSrc = 'https://via.placeholder.com/300x200?text=Trạm';
+        
+        if (product.imageBase64 && product.imageBase64.trim() !== '') {
+          imgSrc = `data:image/png;base64,${product.imageBase64}`;
+        } else {
+          // Attempt to use local image based on imageResourceName or normalized product name
+          const fileName = product.imageResourceName && product.imageResourceName.trim() !== '' 
+            ? product.imageResourceName 
+            : `${normalizeName(product.name)}.png`;
+          
+          // Ensure it ends with an image extension
+          const finalFileName = fileName.match(/\.(png|jpe?g|gif)$/i) ? fileName : `${fileName}.png`;
+          imgSrc = `hinhsp/${finalFileName}`;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.style.cursor = 'pointer'; // Show pointer on hover
+        card.innerHTML = `
+          <img src="${imgSrc}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Trạm';">
+          <div class="product-info">
+            <div class="product-cat">${product.category || 'Trạm'}</div>
+            <h3 class="product-name">${product.name}</h3>
+            <div class="product-price">${formatPrice(product.price)}</div>
+          </div>
+        `;
+        
+        // Add click event to open modal
+        card.onclick = () => showModal(product, imgSrc);
+        
+        gridEl.appendChild(card);
+      });
+    };
+
+    // Modal Logic
+    const modal = document.getElementById('product-modal');
+    const modalClose = document.getElementById('modal-close');
+    
+    const showModal = (product, imgSrc) => {
+      document.getElementById('modal-img').src = imgSrc;
+      document.getElementById('modal-cat').textContent = product.category || 'Trạm';
+      document.getElementById('modal-name').textContent = product.name;
+      document.getElementById('modal-price').textContent = formatPrice(product.price);
+      
+      // Some products might have a note/description
+      const descEl = document.getElementById('modal-desc');
+      if (product.note && product.note.trim() !== '') {
+        descEl.textContent = product.note;
+        descEl.style.display = 'block';
+      } else {
+        descEl.textContent = 'Món này vô cùng thơm ngon và được chuẩn bị từ nguyên liệu tươi sạch của Trạm. Mời bạn thưởng thức!';
+        descEl.style.display = 'block';
+      }
+      
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden'; // Prevent background scroll
+    };
+
+    const closeModal = () => {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    };
+
+    modalClose.onclick = closeModal;
+    modal.onclick = (e) => {
+      if(e.target === modal) closeModal();
+    };
+
+    const renderFilters = (categories) => {
+      filtersEl.innerHTML = '';
+      
+      // 'All' button
+      const allBtn = document.createElement('button');
+      allBtn.className = 'filter-btn active';
+      allBtn.textContent = 'Tất cả';
+      allBtn.onclick = () => {
+        currentCategory = 'all';
+        updateFilterStyles();
+        renderProducts();
+      };
+      filtersEl.appendChild(allBtn);
+
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.textContent = cat.name;
+        btn.onclick = () => {
+          currentCategory = cat.name;
+          updateFilterStyles();
+          renderProducts();
+        };
+        filtersEl.appendChild(btn);
+      });
+    };
+
+    const updateFilterStyles = () => {
+      const btns = filtersEl.querySelectorAll('.filter-btn');
+      btns.forEach(btn => {
+        if ((currentCategory === 'all' && btn.textContent === 'Tất cả') || 
+            btn.textContent === currentCategory) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    };
+
+    // Fetch data
+    Promise.all([
+      get(child(dbRef, 'categories')),
+      get(child(dbRef, 'products'))
+    ]).then((snapshots) => {
+      const catSnapshot = snapshots[0];
+      const prodSnapshot = snapshots[1];
+
+      // Parse Categories
+      let categories = [];
+      if (catSnapshot.exists()) {
+        const catData = catSnapshot.val();
+        if (Array.isArray(catData)) {
+          categories = catData.filter(Boolean);
+        } else {
+          categories = Object.values(catData);
+        }
+      }
+
+      // Parse Products
+      if (prodSnapshot.exists()) {
+        const prodData = prodSnapshot.val();
+        if (Array.isArray(prodData)) {
+          allProducts = prodData.filter(Boolean);
+        } else {
+          allProducts = Object.values(prodData);
+        }
+      }
+
+      
+      renderProducts();
+    }).catch((error) => {
+      console.error(error);
+      gridEl.innerHTML = `<div class="no-products">Lỗi khi tải dữ liệu. Vui lòng thử lại sau!</div>`;
+      filtersEl.innerHTML = '';
+    });
   </script>
 </body>
 </html>
+
+
 
 
