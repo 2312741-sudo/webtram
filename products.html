@@ -429,9 +429,8 @@
             if (product.imageBase64 && product.imageBase64.trim() !== '') {
               imgSrc = `data:image/png;base64,${product.imageBase64}`;
             } else {
-              const dbImageName = product.imageResourceName || product.imageResourName;
-              const fileName = dbImageName && dbImageName.trim() !== '' 
-                ? dbImageName 
+              const fileName = product.imageResourceName && product.imageResourceName.trim() !== '' 
+                ? product.imageResourceName 
                 : `${normalizeName(product.name)}.png`;
               const finalFileName = fileName.match(/\.(png|jpe?g|gif)$/i) ? fileName : `${fileName}.png`;
               imgSrc = `hinhsp/${finalFileName}`;
