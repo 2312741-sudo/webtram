@@ -375,6 +375,56 @@
     }
     .btn-messenger:hover { opacity: .9; transform: translateY(-2px); box-shadow: 0 5px 0 #0052a0; }
     .order-sending { text-align: center; padding: 10px; font-size: 14px; color: var(--teal); font-weight: 600; display: none; }
+
+    /* Zalo Copy Popup */
+    .zalo-copy-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(4px);
+      z-index: 500; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .zalo-copy-backdrop.show { opacity: 1; pointer-events: auto; }
+    .zalo-copy-box {
+      background: #fffef9; border-radius: 20px; border: 2px solid var(--navy);
+      width: min(92%, 420px); box-shadow: 0 24px 60px rgba(45,42,74,.35);
+      transform: translateY(20px) scale(.97); transition: transform .3s cubic-bezier(.175,.885,.32,1.275);
+      overflow: hidden;
+    }
+    .zalo-copy-backdrop.show .zalo-copy-box { transform: translateY(0) scale(1); }
+    .zalo-copy-head {
+      padding: 16px 20px; background: #006af5; color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      font-weight: 800; font-size: 17px;
+    }
+    .zalo-copy-close {
+      width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,.6);
+      background: rgba(255,255,255,.15); color: #fff; cursor: pointer; font-size: 15px;
+      font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    .zalo-copy-close:hover { background: rgba(255,255,255,.3); }
+    .zalo-copy-steps { padding: 14px 20px 0; display: flex; flex-direction: column; gap: 6px; }
+    .zalo-step { font-size: 14px; font-weight: 600; color: var(--navy); background: #f0f7ff; border-radius: 8px; padding: 8px 12px; }
+    .zalo-copy-text {
+      display: block; width: calc(100% - 40px); margin: 12px 20px 0;
+      height: 140px; border-radius: 10px; border: 2px solid var(--navy);
+      background: #f9f7f0; font-family: inherit; font-size: 13px; color: var(--ink);
+      padding: 10px 12px; resize: none; box-sizing: border-box; line-height: 1.7;
+    }
+    .zalo-copy-actions { display: flex; gap: 10px; padding: 14px 20px 20px; }
+    .btn-copy-msg {
+      flex: 1; padding: 13px; border-radius: 12px; border: 2px solid var(--navy);
+      background: #fff7e6; color: var(--navy); font-weight: 800; font-size: 15px;
+      cursor: pointer; font-family: inherit; box-shadow: 0 3px 0 var(--navy);
+      transition: .15s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-copy-msg:hover { background: #fff2d5; transform: translateY(-2px); }
+    .btn-copy-msg.copied { background: #d4edda; border-color: #28a745; color: #155724; box-shadow: 0 3px 0 #28a745; }
+    .btn-open-zalo {
+      flex: 1; padding: 13px; border-radius: 12px; border: 2px solid #006af5;
+      background: #006af5; color: #fff; font-weight: 800; font-size: 15px;
+      cursor: pointer; font-family: inherit; box-shadow: 0 3px 0 #0052c4;
+      transition: .15s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-open-zalo:hover { background: #0052c4; transform: translateY(-2px); }
   </style>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
@@ -537,9 +587,28 @@
         </div>
         <div class="order-sending" id="order-sending">⏳ Đang lưu đơn hàng...</div>
         <div class="order-send-btns">
-          <button class="btn-zalo" id="btn-send-zalo">💬 Gửi qua Zalo</button>
+          <button class="btn-zalo" id="btn-send-zalo">💬 Sao chép & Gửi Zalo</button>
           <button class="btn-messenger" id="btn-send-messenger">💬 Gửi qua Messenger</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zalo Copy Popup -->
+  <div class="zalo-copy-backdrop" id="zalo-copy-popup">
+    <div class="zalo-copy-box">
+      <div class="zalo-copy-head">
+        <span>💬 Gửi qua Zalo</span>
+        <button class="zalo-copy-close" id="zalo-copy-close">✕</button>
+      </div>
+      <div class="zalo-copy-steps">
+        <div class="zalo-step">1️⃣ Bấm <strong>"Copy nội dung"</strong> để sao chép đơn hàng</div>
+        <div class="zalo-step">2️⃣ Bấm <strong>"Mở Zalo"</strong> và dán (paste) vào khung tin nhắn</div>
+      </div>
+      <textarea class="zalo-copy-text" id="zalo-copy-text" readonly></textarea>
+      <div class="zalo-copy-actions">
+        <button class="btn-copy-msg" id="btn-copy-msg">📋 Copy nội dung</button>
+        <button class="btn-open-zalo" id="btn-open-zalo">💬 Mở Zalo</button>
       </div>
     </div>
   </div>
@@ -1064,7 +1133,34 @@ const closeModal = () => {
       const encoded = encodeURIComponent(msg);
 
       if (channel === 'zalo') {
-        window.open(`https://zalo.me/0941668405?text=${encoded}`, '_blank');
+        // Zalo doesn't support pre-filled text via deeplink, show copy popup instead
+        const popup = document.getElementById('zalo-copy-popup');
+        const textArea = document.getElementById('zalo-copy-text');
+        textArea.value = msg;
+        popup.classList.add('show');
+
+        // Copy button
+        const copyBtn = document.getElementById('btn-copy-msg');
+        copyBtn.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(msg);
+          } catch(e) {
+            textArea.select(); document.execCommand('copy');
+          }
+          copyBtn.textContent = '✅ Đã copy!';
+          copyBtn.classList.add('copied');
+          setTimeout(() => { copyBtn.textContent = '📋 Copy nội dung'; copyBtn.classList.remove('copied'); }, 2000);
+        };
+
+        // Open Zalo button
+        document.getElementById('btn-open-zalo').onclick = () => {
+          window.open('https://zalo.me/0941668405', '_blank');
+        };
+
+        // Close
+        document.getElementById('zalo-copy-close').onclick = () => popup.classList.remove('show');
+        popup.onclick = (e) => { if (e.target === popup) popup.classList.remove('show'); };
+
       } else {
         window.open(`https://m.me/TramchanhDaLat?text=${encoded}`, '_blank');
       }
