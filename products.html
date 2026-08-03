@@ -588,22 +588,22 @@
         <div class="order-sending" id="order-sending">⏳ Đang lưu đơn hàng...</div>
         <div class="order-send-btns">
           <button class="btn-zalo" id="btn-send-zalo">💬 Sao chép & Gửi Zalo</button>
-          <button class="btn-messenger" id="btn-send-messenger">💬 Gửi qua Messenger</button>
+          <button class="btn-messenger" id="btn-send-messenger">💬 Sao chép & Gửi Messenger</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Zalo Copy Popup -->
+  <!-- Copy Popup (Zalo & Messenger) -->
   <div class="zalo-copy-backdrop" id="zalo-copy-popup">
     <div class="zalo-copy-box">
-      <div class="zalo-copy-head">
-        <span>💬 Gửi qua Zalo</span>
+      <div class="zalo-copy-head" id="popup-head">
+        <span id="popup-title">💬 Gửi qua Zalo</span>
         <button class="zalo-copy-close" id="zalo-copy-close">✕</button>
       </div>
       <div class="zalo-copy-steps">
         <div class="zalo-step">1️⃣ Bấm <strong>"Copy nội dung"</strong> để sao chép đơn hàng</div>
-        <div class="zalo-step">2️⃣ Bấm <strong>"Mở Zalo"</strong> và dán (paste) vào khung tin nhắn</div>
+        <div class="zalo-step" id="popup-step-2">2️⃣ Bấm <strong>"Mở Zalo"</strong> và dán (paste) vào khung tin nhắn</div>
       </div>
       <textarea class="zalo-copy-text" id="zalo-copy-text" readonly></textarea>
       <div class="zalo-copy-actions">
@@ -1130,40 +1130,67 @@ const closeModal = () => {
       sendingEl.style.display = 'none';
 
       const msg = buildMessage(name, phone, address, note);
-      const encoded = encodeURIComponent(msg);
+
+      const popup = document.getElementById('zalo-copy-popup');
+      const popupTitle = document.getElementById('popup-title');
+      const popupHead = document.getElementById('popup-head');
+      const popupStep2 = document.getElementById('popup-step-2');
+      const textArea = document.getElementById('zalo-copy-text');
+      const openBtn = document.getElementById('btn-open-zalo');
+      const copyBtn = document.getElementById('btn-copy-msg');
+
+      textArea.value = msg;
 
       if (channel === 'zalo') {
-        // Zalo doesn't support pre-filled text via deeplink, show copy popup instead
-        const popup = document.getElementById('zalo-copy-popup');
-        const textArea = document.getElementById('zalo-copy-text');
-        textArea.value = msg;
-        popup.classList.add('show');
-
-        // Copy button
-        const copyBtn = document.getElementById('btn-copy-msg');
-        copyBtn.onclick = async () => {
-          try {
-            await navigator.clipboard.writeText(msg);
-          } catch(e) {
-            textArea.select(); document.execCommand('copy');
-          }
-          copyBtn.textContent = '✅ Đã copy!';
-          copyBtn.classList.add('copied');
-          setTimeout(() => { copyBtn.textContent = '📋 Copy nội dung'; copyBtn.classList.remove('copied'); }, 2000);
-        };
-
-        // Open Zalo button
-        document.getElementById('btn-open-zalo').onclick = () => {
-          window.open('https://zalo.me/0941668405', '_blank');
-        };
-
-        // Close
-        document.getElementById('zalo-copy-close').onclick = () => popup.classList.remove('show');
-        popup.onclick = (e) => { if (e.target === popup) popup.classList.remove('show'); };
-
+        if (popupTitle) popupTitle.textContent = '💬 Gửi qua Zalo';
+        if (popupHead) popupHead.style.background = '#006af5';
+        if (popupStep2) popupStep2.innerHTML = '2️⃣ Bấm <strong>"Mở Zalo"</strong> và dán (paste) vào khung tin nhắn';
+        if (openBtn) {
+          openBtn.textContent = '💬 Mở Zalo';
+          openBtn.style.background = '#006af5';
+          openBtn.style.borderColor = '#006af5';
+          openBtn.style.boxShadow = '0 3px 0 #0052c4';
+          openBtn.onclick = () => {
+            window.location.href = 'https://zalo.me/0941668405';
+          };
+        }
       } else {
-        window.open(`https://m.me/TramchanhDaLat?text=${encoded}`, '_blank');
+        if (popupTitle) popupTitle.textContent = '💬 Gửi qua Messenger';
+        if (popupHead) popupHead.style.background = 'linear-gradient(135deg, #0095f6, #a855f7)';
+        if (popupStep2) popupStep2.innerHTML = '2️⃣ Bấm <strong>"Mở Messenger"</strong> và dán (paste) vào tin nhắn cho Trạm';
+        if (openBtn) {
+          openBtn.textContent = '💬 Mở Messenger';
+          openBtn.style.background = '#0095f6';
+          openBtn.style.borderColor = '#0095f6';
+          openBtn.style.boxShadow = '0 3px 0 #0070d0';
+          openBtn.onclick = () => {
+            window.location.href = 'https://m.me/TramchanhDaLat';
+          };
+        }
       }
+
+      popup.classList.add('show');
+
+      // Auto attempt copy to clipboard on mobile if supported
+      try {
+        navigator.clipboard.writeText(msg);
+      } catch(e) {}
+
+      // Copy button
+      copyBtn.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(msg);
+        } catch(e) {
+          textArea.select(); document.execCommand('copy');
+        }
+        copyBtn.textContent = '✅ Đã copy!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => { copyBtn.textContent = '📋 Copy nội dung'; copyBtn.classList.remove('copied'); }, 2000);
+      };
+
+      // Close
+      document.getElementById('zalo-copy-close').onclick = () => popup.classList.remove('show');
+      popup.onclick = (e) => { if (e.target === popup) popup.classList.remove('show'); };
 
       // Clear cart after order
       cart = []; saveCartToStorage(); updateCartBadge();
