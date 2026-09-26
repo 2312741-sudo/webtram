@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import CartToast from "@/components/CartToast";
 import FloatingSpeedDial from "@/components/FloatingSpeedDial";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 
 export default function ShopLayout({
   children,
@@ -12,6 +13,7 @@ export default function ShopLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col justify-between relative selection:bg-mustard selection:text-navy">
+      <ScrollProgressBar />
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />

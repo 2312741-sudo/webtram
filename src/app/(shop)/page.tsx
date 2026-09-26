@@ -15,6 +15,7 @@ import { db } from "@/lib/db";
 import ProductGrid from "@/components/ProductGrid";
 import HeroShowcase from "@/components/HeroShowcase";
 import MarqueeBanner from "@/components/MarqueeBanner";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export const revalidate = 60; // ISR cache revalidation every minute
 
@@ -137,7 +138,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
             {/* Left Column: Heading & CTA */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <ScrollReveal direction="up" delay={0.05} className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFF2D5] border-2 border-navy text-maroon text-xs font-black uppercase tracking-wider shadow-[0_2px_0_#2D2A4A]">
                 <Sparkles className="w-3.5 h-3.5 text-mustard" />
                 <span>Thực đơn Trạm Đà Lạt • Tươi mới mỗi ngày</span>
@@ -186,23 +187,25 @@ export default async function HomePage() {
                   <span>Giao tận nơi Đà Lạt</span>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Right Column: Interactive Hero Showcase */}
-            <div className="lg:col-span-5">
+            <ScrollReveal direction="left" delay={0.15} className="lg:col-span-5">
               <HeroShowcase />
-            </div>
+            </ScrollReveal>
 
           </div>
         </div>
       </section>
 
       {/* MARQUEE INFINITE TICKER */}
-      <MarqueeBanner />
+      <ScrollReveal direction="up" delay={0.05}>
+        <MarqueeBanner />
+      </ScrollReveal>
 
       {/* 3 STATIONS SECTION */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <ScrollReveal direction="up" className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-black text-teal uppercase tracking-widest block mb-2">
             Hệ sinh thái Trạm
           </span>
@@ -212,55 +215,60 @@ export default async function HomePage() {
           <p className="text-sm text-navy/70 mt-2 font-medium">
             Chọn món từ trạm bạn yêu thích hoặc kết hợp nhiều trạm trong cùng một đơn hàng!
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {stations.map((st) => (
-            <div
+          {stations.map((st, idx) => (
+            <ScrollReveal
               key={st.title}
-              className="bg-white rounded-3xl p-6 border-2 border-navy shadow-[0_6px_20px_rgba(45,42,74,0.08)] flex flex-col justify-between hover:-translate-y-1.5 transition-all duration-300 group"
+              delay={idx * 0.12}
+              direction="up"
+              scale={true}
+              className="h-full"
             >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-black px-2.5 py-1 rounded-xl bg-[#FFF2D5] border border-navy/20 text-navy">
-                    {st.badge}
-                  </span>
-                  <span className="text-xs font-bold text-muted uppercase">
-                    {st.tagline}
-                  </span>
+              <div className="bg-white rounded-3xl p-6 border-2 border-navy shadow-[0_6px_20px_rgba(45,42,74,0.08)] flex flex-col justify-between hover:-translate-y-1.5 transition-all duration-300 group h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-black px-2.5 py-1 rounded-xl bg-[#FFF2D5] border border-navy/20 text-navy">
+                      {st.badge}
+                    </span>
+                    <span className="text-xs font-bold text-muted uppercase">
+                      {st.tagline}
+                    </span>
+                  </div>
+
+                  <div className="aspect-[16/10] rounded-2xl overflow-hidden border-2 border-navy mb-4 bg-paper">
+                    <img
+                      src={st.image}
+                      alt={st.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+
+                  <h3 className={`font-serif text-2xl font-black ${st.accent} mb-2`}>
+                    {st.title}
+                  </h3>
+                  <p className="text-sm text-navy/70 leading-relaxed font-medium mb-6">
+                    {st.desc}
+                  </p>
                 </div>
 
-                <div className="aspect-[16/10] rounded-2xl overflow-hidden border-2 border-navy mb-4 bg-paper">
-                  <img
-                    src={st.image}
-                    alt={st.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-
-                <h3 className={`font-serif text-2xl font-black ${st.accent} mb-2`}>
-                  {st.title}
-                </h3>
-                <p className="text-sm text-navy/70 leading-relaxed font-medium mb-6">
-                  {st.desc}
-                </p>
+                <Link
+                  href={st.link}
+                  className={`w-full py-3 text-center text-xs font-black uppercase tracking-wider rounded-xl border-2 border-navy shadow-[0_3px_0_#2D2A4A] active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 ${st.bgBtn}`}
+                >
+                  <span>Xem menu {st.title}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
-
-              <Link
-                href={st.link}
-                className={`w-full py-3 text-center text-xs font-black uppercase tracking-wider rounded-xl border-2 border-navy shadow-[0_3px_0_#2D2A4A] active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5 ${st.bgBtn}`}
-              >
-                <span>Xem menu {st.title}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
       {/* FEATURED PRODUCTS GRID */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <ScrollReveal direction="up" className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <span className="text-xs font-black text-maroon uppercase tracking-widest block mb-1">
               Tuyển chọn đặc biệt
@@ -276,14 +284,14 @@ export default async function HomePage() {
             <span>Xem tất cả thực đơn</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
+        </ScrollReveal>
 
         <ProductGrid products={featuredProducts as any} />
       </section>
 
       {/* 3 PHYSICAL BRANCHES LOCATIONS */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <ScrollReveal direction="up" className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-black text-maroon uppercase tracking-widest block mb-2">
             Địa chỉ ghé quán
           </span>
@@ -291,65 +299,70 @@ export default async function HomePage() {
             3 Chi Nhánh Trạm Tại Đà Lạt
           </h2>
           <p className="text-sm text-navy/70 mt-2 font-medium">
-            Đều mở cửa đón khách từ <strong className="text-maroon font-bold">19:00 đến 24:00</strong> mỗi tối.
+            Đều mở cửa đón khách từ <strong className="text-maroon font-bold">19:00 đến 24:00</strong> mỗi tối (Thứ 2 → Chủ Nhật).
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {branches.map((branch, idx) => (
-            <div
+            <ScrollReveal
               key={branch.name}
-              className="bg-white rounded-3xl p-6 border-2 border-navy shadow-[0_4px_16px_rgba(45,42,74,0.06)] flex flex-col justify-between hover:-translate-y-1 transition-all"
+              delay={idx * 0.12}
+              direction="up"
+              scale={true}
+              className="h-full"
             >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#FFF2D5] border border-navy/20 text-xs font-black text-navy">
-                    {branch.badge}
-                  </span>
-                  <span className="text-[11px] font-bold text-teal flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {branch.hours}
-                  </span>
+              <div className="bg-white rounded-3xl p-6 border-2 border-navy shadow-[0_4px_16px_rgba(45,42,74,0.06)] flex flex-col justify-between hover:-translate-y-1 transition-all h-full">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-1 rounded-lg bg-[#FFF2D5] border border-navy/20 text-xs font-black text-navy">
+                      {branch.badge}
+                    </span>
+                    <span className="text-[11px] font-bold text-teal flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {branch.hours}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="font-serif text-xl font-black text-navy">
+                      {branch.name}
+                    </h3>
+                    <span className="text-[11px] font-bold text-muted uppercase">
+                      {branch.tag}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-navy/85 font-bold flex items-start gap-2">
+                    <MapPin className="w-4 h-4 text-maroon shrink-0 mt-0.5" />
+                    <span>{branch.address}</span>
+                  </p>
+
+                  <p className="text-xs text-muted font-medium bg-[#F6EFDF] p-3 rounded-xl border border-navy/10 leading-relaxed">
+                    {branch.highlight}
+                  </p>
                 </div>
 
-                <div>
-                  <h3 className="font-serif text-xl font-black text-navy">
-                    {branch.name}
-                  </h3>
-                  <span className="text-[11px] font-bold text-muted uppercase">
-                    {branch.tag}
-                  </span>
+                <div className="pt-4 mt-2">
+                  <a
+                    href={branch.mapsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-2.5 px-3 bg-[#FFF2D5] hover:bg-[#FFE6B3] text-navy font-black text-xs rounded-xl border border-navy shadow-xs flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    <Compass className="w-3.5 h-3.5 text-teal" />
+                    <span>Mở Google Maps chỉ đường</span>
+                  </a>
                 </div>
-
-                <p className="text-xs text-navy/85 font-bold flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-maroon shrink-0 mt-0.5" />
-                  <span>{branch.address}</span>
-                </p>
-
-                <p className="text-xs text-muted font-medium bg-[#F6EFDF] p-3 rounded-xl border border-navy/10 leading-relaxed">
-                  {branch.highlight}
-                </p>
               </div>
-
-              <div className="pt-4 mt-2">
-                <a
-                  href={branch.mapsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full py-2.5 px-3 bg-[#FFF2D5] hover:bg-[#FFE6B3] text-navy font-black text-xs rounded-xl border border-navy shadow-xs flex items-center justify-center gap-1.5 transition-all"
-                >
-                  <Compass className="w-3.5 h-3.5 text-teal" />
-                  <span>Mở Google Maps chỉ đường</span>
-                </a>
-              </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
       {/* CUSTOMER TESTIMONIALS */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <ScrollReveal direction="up" className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-black text-teal uppercase tracking-widest block mb-2">
             Đánh giá từ khách quen
           </span>
@@ -359,74 +372,81 @@ export default async function HomePage() {
           <p className="text-sm text-navy/70 mt-2 font-medium">
             Hàng ngàn lượt ghé thăm và yêu mến mỗi tháng tại phố núi Đà Lạt.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t, idx) => (
-            <div
+            <ScrollReveal
               key={idx}
-              className="bg-[#FFFDF7] rounded-3xl p-6 border-2 border-navy shadow-[0_4px_16px_rgba(45,42,74,0.06)] flex flex-col justify-between"
+              delay={idx * 0.12}
+              direction="up"
+              scale={true}
+              className="h-full"
             >
-              <div className="space-y-3">
-                <div className="flex items-center gap-1 text-mustard">
-                  {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-mustard text-mustard" />
-                  ))}
+              <div className="bg-[#FFFDF7] rounded-3xl p-6 border-2 border-navy shadow-[0_4px_16px_rgba(45,42,74,0.06)] flex flex-col justify-between h-full">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-1 text-mustard">
+                    {[...Array(t.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-mustard text-mustard" />
+                    ))}
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-navy/85 leading-relaxed font-medium italic">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
                 </div>
 
-                <p className="text-xs sm:text-sm text-navy/85 leading-relaxed font-medium italic">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-navy/10 mt-4 flex items-center justify-between">
-                <div>
-                  <h4 className="font-serif font-black text-navy text-sm">
-                    {t.author}
-                  </h4>
-                  <span className="text-[11px] font-medium text-muted">
-                    {t.role}
+                <div className="pt-4 border-t border-navy/10 mt-4 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-serif font-black text-navy text-sm">
+                      {t.author}
+                    </h4>
+                    <span className="text-[11px] font-medium text-muted">
+                      {t.role}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-black text-teal bg-teal/10 px-2 py-0.5 rounded-md border border-teal/20">
+                    {t.favorite}
                   </span>
                 </div>
-                <span className="text-[10px] font-black text-teal bg-teal/10 px-2 py-0.5 rounded-md border border-teal/20">
-                  {t.favorite}
-                </span>
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
       {/* BRAND PHILOSOPHY BANNER */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="bg-[#FFF2D5] rounded-3xl p-8 sm:p-12 border-3 border-navy shadow-[0_8px_24px_rgba(45,42,74,0.1)] relative overflow-hidden">
-          <div className="max-w-2xl relative z-10 space-y-4">
-            <span className="text-xs font-black text-maroon uppercase tracking-widest">
-              Câu chuyện thương hiệu
-            </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-black text-navy leading-snug">
-              &ldquo;Trạm dừng chân ngọt lành giữa lòng phố núi Đà Lạt&rdquo;
-            </h2>
-            <p className="text-sm sm:text-base text-navy/85 leading-relaxed font-medium">
-              Chúng tôi tin rằng thức uống ngon nhất là thức uống tự nhiên nhất. Không siro hương liệu nhân tạo, không hóa chất bảo quản. Từng ly trà, chai sữa hạt và mẻ bánh nướng được hoàn thành mỗi tối với niềm đam mê mang lại sức khỏe và năng lượng tích cực cho bạn.
-            </p>
-            <div className="pt-2 flex flex-wrap gap-3">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-navy hover:bg-navy-dark text-white font-black text-xs uppercase tracking-wider rounded-xl border border-navy shadow-sm transition-all"
-              >
-                <span>Liên hệ với Trạm</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <Link
-                href="/hours"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-white hover:bg-[#F6EFDF] text-navy font-black text-xs uppercase tracking-wider rounded-xl border border-navy/30 transition-all"
-              >
-                <span>Xem bản đồ 3 trạm</span>
-              </Link>
+        <ScrollReveal scale={true} direction="up">
+          <div className="bg-[#FFF2D5] rounded-3xl p-8 sm:p-12 border-3 border-navy shadow-[0_8px_24px_rgba(45,42,74,0.1)] relative overflow-hidden">
+            <div className="max-w-2xl relative z-10 space-y-4">
+              <span className="text-xs font-black text-maroon uppercase tracking-widest">
+                Câu chuyện thương hiệu
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-black text-navy leading-snug">
+                &ldquo;Trạm dừng chân ngọt lành giữa lòng phố núi Đà Lạt&rdquo;
+              </h2>
+              <p className="text-sm sm:text-base text-navy/85 leading-relaxed font-medium">
+                Chúng tôi tin rằng thức uống ngon nhất là thức uống tự nhiên nhất. Không siro hương liệu nhân tạo, không hóa chất bảo quản. Từng ly trà, chai sữa hạt và mẻ bánh nướng được hoàn thành mỗi tối với niềm đam mê mang lại sức khỏe và năng lượng tích cực cho bạn.
+              </p>
+              <div className="pt-2 flex flex-wrap gap-3">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-navy hover:bg-navy-dark text-white font-black text-xs uppercase tracking-wider rounded-xl border border-navy shadow-sm transition-all"
+                >
+                  <span>Liên hệ với Trạm</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/hours"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-white hover:bg-[#F6EFDF] text-navy font-black text-xs uppercase tracking-wider rounded-xl border border-navy/30 transition-all"
+                >
+                  <span>Xem bản đồ 3 trạm</span>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
     </div>
