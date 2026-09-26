@@ -73,25 +73,31 @@ export default async function HomePage() {
 
   const branches = [
     {
-      name: "Trạm Ngô Quyền",
-      address: "03 Ngô Quyền, Phường 6, TP. Đà Lạt",
+      name: "Trạm Chanh",
+      tag: "Trà Trái Cây & Bánh Lăn",
+      address: "09 Hải Thượng, Phường Cam Ly, TP. Đà Lạt",
       hours: "19:00 - 24:00",
-      highlight: "Không gian ấm cúng, gần chợ Hải Thượng",
-      mapsUrl: "https://maps.google.com/?q=03+Ngo+Quyen+Da+Lat",
+      highlight: "Trà Olong hoa quả tự nhiên, trà chanh tươi thanh mát & bánh lăn nướng giòn.",
+      mapsUrl: "https://maps.google.com/?q=09+Hai+Thuong+Da+Lat",
+      badge: "🍋 Trạm Chanh",
     },
     {
-      name: "Trạm Phan Đình Phùng",
-      address: "13 Phan Đình Phùng, Phường 1, TP. Đà Lạt",
+      name: "Trạm Sữa",
+      tag: "Sữa Hạt & Bánh Tam Giác",
+      address: "44 Yersin, Phường Xuân Hương, TP. Đà Lạt",
       hours: "19:00 - 24:00",
-      highlight: "Trung tâm sầm uất, view phố đêm lãng mạn",
-      mapsUrl: "https://maps.google.com/?q=13+Phan+Dinh+Phung+Da+Lat",
+      highlight: "Sữa bò tươi nguyên chất kết hợp hạt hữu cơ béo bùi & bánh tam giác nướng ấm nóng.",
+      mapsUrl: "https://maps.google.com/?q=44+Yersin+Da+Lat",
+      badge: "🥛 Trạm Sữa",
     },
     {
-      name: "Trạm Nguyễn Chí Thanh",
-      address: "27 Nguyễn Chí Thanh, Phường 1, TP. Đà Lạt",
+      name: "Trạm Bánh",
+      tag: "Cà Phê, Bơ Coco & Waffle",
+      address: "46 Yersin, Phường Xuân Hương, TP. Đà Lạt",
       hours: "19:00 - 24:00",
-      highlight: "Cách chợ đêm Đà Lạt & Hồ Xuân Hương 200m",
-      mapsUrl: "https://maps.google.com/?q=27+Nguyen+Chi+Thanh+Da+Lat",
+      highlight: "Cà phê đậm vị Việt Nam, đặc sản bơ sáp cốt dừa & bánh waffle nướng bơ tỏi thơm lừng.",
+      mapsUrl: "https://maps.google.com/?q=46+Yersin+Da+Lat",
+      badge: "🥐 Trạm Bánh",
     },
   ];
 
@@ -298,7 +304,7 @@ export default async function HomePage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="px-2.5 py-1 rounded-lg bg-[#FFF2D5] border border-navy/20 text-xs font-black text-navy">
-                    Chi nhánh 0{idx + 1}
+                    {branch.badge}
                   </span>
                   <span className="text-[11px] font-bold text-teal flex items-center gap-1">
                     <Clock className="w-3 h-3" />
@@ -306,16 +312,21 @@ export default async function HomePage() {
                   </span>
                 </div>
 
-                <h3 className="font-serif text-xl font-black text-navy">
-                  {branch.name}
-                </h3>
+                <div>
+                  <h3 className="font-serif text-xl font-black text-navy">
+                    {branch.name}
+                  </h3>
+                  <span className="text-[11px] font-bold text-muted uppercase">
+                    {branch.tag}
+                  </span>
+                </div>
 
-                <p className="text-xs text-navy/80 font-bold flex items-start gap-2">
+                <p className="text-xs text-navy/85 font-bold flex items-start gap-2">
                   <MapPin className="w-4 h-4 text-maroon shrink-0 mt-0.5" />
                   <span>{branch.address}</span>
                 </p>
 
-                <p className="text-xs text-muted font-medium bg-[#F6EFDF] p-3 rounded-xl border border-navy/10">
+                <p className="text-xs text-muted font-medium bg-[#F6EFDF] p-3 rounded-xl border border-navy/10 leading-relaxed">
                   {branch.highlight}
                 </p>
               </div>
