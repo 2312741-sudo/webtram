@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -10,6 +10,7 @@ import {
   ArrowLeft,
   Menu,
   X,
+  LogOut,
   ShieldCheck,
 } from "lucide-react";
 
@@ -19,7 +20,13 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // If on login page, render clean layout without sidebar
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
 
   const navItems = [
     { label: "Tổng Quan", href: "/admin", icon: LayoutDashboard },
@@ -30,6 +37,16 @@ export default function AdminLayout({
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin";
     return pathname.startsWith(href);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/auth/logout", { method: "POST" });
+      router.push("/admin/login");
+      router.refresh();
+    } catch (e) {
+      window.location.href = "/admin/login";
+    }
   };
 
   return (
@@ -73,6 +90,12 @@ export default function AdminLayout({
             </div>
           </div>
 
+          {/* Admin status pill */}
+          <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/10 text-xs">
+            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-white/90 font-bold">Admin: Đang trực tuyến</span>
+          </div>
+
           {/* Navigation Links */}
           <nav className="space-y-1.5">
             {navItems.map((item) => {
@@ -97,7 +120,7 @@ export default function AdminLayout({
           </nav>
         </div>
 
-        {/* Bottom Back Button */}
+        {/* Bottom Actions */}
         <div className="pt-4 border-t border-white/10 space-y-2">
           <Link
             href="/"
@@ -106,7 +129,16 @@ export default function AdminLayout({
             <ArrowLeft className="w-4 h-4" />
             <span>Về Trang Bán Hàng</span>
           </Link>
-          <div className="text-[10px] text-white/40 px-3">
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 text-xs font-bold text-red-300 hover:text-red-200 transition-colors py-2 px-3 rounded-lg hover:bg-red-500/10"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Đăng Xuất Admin</span>
+          </button>
+
+          <div className="text-[10px] text-white/40 px-3 pt-1">
             Trạm — Đà Lạt • v1.0 Fullstack
           </div>
         </div>
