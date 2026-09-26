@@ -415,7 +415,7 @@ export default async function HomePage() {
                 href="/contact"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-navy hover:bg-navy-dark text-white font-black text-xs uppercase tracking-wider rounded-xl border border-navy shadow-sm transition-all"
               >
-                <span>Liên hệ & Đặt tiệc</span>
+                <span>Liên hệ với Trạm</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link
