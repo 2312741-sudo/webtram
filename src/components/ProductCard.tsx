@@ -21,9 +21,10 @@ export interface ProductData {
 interface ProductCardProps {
   product: ProductData;
   onSelect?: (product: ProductData) => void;
+  index?: number;
 }
 
-export default function ProductCard({ product, onSelect }: ProductCardProps) {
+export default function ProductCard({ product, onSelect, index }: ProductCardProps) {
   const { addItem } = useCartStore();
   const [added, setAdded] = useState(false);
 
@@ -45,14 +46,20 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
     setTimeout(() => setAdded(false), 1200);
   };
 
+  const staggerDelay = typeof index === "number" ? (index % 4) * 0.07 : 0;
+
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 25, scale: 0.96 }}
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.15, margin: "0px 0px -30px 0px" }}
+      viewport={{ once: true, amount: 0.1, margin: "0px 0px -40px 0px" }}
       exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        duration: 0.4,
+        delay: staggerDelay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       whileHover={{ y: -6 }}
       onClick={() => onSelect && onSelect(product)}
       className="group bg-white rounded-3xl border-2 border-navy shadow-[0_4px_12px_rgba(45,42,74,0.07)] hover:shadow-[0_16px_32px_rgba(45,42,74,0.16)] transition-shadow duration-300 cursor-pointer overflow-hidden flex flex-col justify-between"
