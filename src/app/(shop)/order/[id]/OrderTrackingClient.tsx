@@ -241,7 +241,7 @@ export default function OrderTrackingClient({
               </div>
             </div>
 
-            {/* Support hotline */}
+            {/* Support hotline & messaging */}
             <div className="pt-4 flex flex-col gap-2">
               <a
                 href="tel:0941668405"
@@ -249,6 +249,16 @@ export default function OrderTrackingClient({
               >
                 <Phone className="w-4 h-4" />
                 <span>Gọi Hotline Trạm (0941 668 405)</span>
+              </a>
+
+              <a
+                href="https://www.facebook.com/messages/t/115777478290228"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:brightness-110 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Nhắn Tin Messenger Cho Trạm</span>
               </a>
 
               <a

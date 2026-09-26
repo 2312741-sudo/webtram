@@ -20,6 +20,16 @@ export function generateOrderCode(): string {
   return `TR${d}${m}-${random}`;
 }
 
+export const MESSENGER_DIRECT_URL =
+  process.env.NEXT_PUBLIC_MESSENGER_URL ||
+  "https://www.facebook.com/messages/t/115777478290228";
+export const MESSENGER_SHORT_URL = "https://m.me/TramchanhDaLat";
+export const FACEBOOK_PAGE_URL =
+  process.env.NEXT_PUBLIC_FACEBOOK_PAGE ||
+  "https://www.facebook.com/TramchanhDaLat";
+export const ZALO_URL =
+  process.env.NEXT_PUBLIC_ZALO_URL || "https://zalo.me/0941668405";
+
 export const ORDER_STATUS_MAP: Record<
   string,
   { label: string; color: string; bg: string }

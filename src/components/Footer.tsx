@@ -23,7 +23,7 @@ export default function Footer() {
             <p className="text-sm text-[#F6EFDF]/80 leading-relaxed mb-4">
               "Luôn tươi ngon vì sức khỏe" — Trạm mang đến những ly trà trái cây tươi mát, sữa hạt dinh dưỡng nguyên chất và bánh nướng thơm lừng mỗi ngày tại Đà Lạt.
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 flex-wrap">
               <a
                 href={process.env.NEXT_PUBLIC_ZALO_URL || "https://zalo.me/0941668405"}
                 target="_blank"
@@ -34,13 +34,21 @@ export default function Footer() {
                 <span>Zalo Trạm</span>
               </a>
               <a
-                href={process.env.NEXT_PUBLIC_MESSENGER_URL || "https://m.me/TramchanhDaLat"}
+                href="https://www.facebook.com/messages/t/115777478290228"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg text-xs font-bold hover:brightness-110 transition-all"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Messenger</span>
+              </a>
+              <a
+                href="https://www.facebook.com/TramchanhDaLat"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1877F2] text-white rounded-lg text-xs font-bold hover:brightness-110 transition-all"
+              >
+                <span>Fanpage</span>
               </a>
             </div>
           </div>

@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import { formatVND } from "@/lib/utils";
+import SocialOrderModal from "@/components/SocialOrderModal";
 
 export default function CartPage() {
   const router = useRouter();
@@ -39,7 +40,20 @@ export default function CartPage() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [note, setNote] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"VIETQR" | "COD" | "ZALO">("VIETQR");
+  const [paymentMethod, setPaymentMethod] = useState<"VIETQR" | "COD" | "ZALO" | "MESSENGER">("VIETQR");
+
+  // Social popup state
+  const [socialModal, setSocialModal] = useState<{
+    isOpen: boolean;
+    channel: "zalo" | "messenger";
+    orderCode: string;
+    messageContent: string;
+  }>({
+    isOpen: false,
+    channel: "messenger",
+    orderCode: "",
+    messageContent: "",
+  });
 
   // Loading & submission state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -98,10 +112,21 @@ export default function CartPage() {
       // Clear the cart
       clearCart();
 
-      // If user chose Zalo or wants to open Zalo:
-      if (paymentMethod === "ZALO") {
-        const zaloMsg = `Trạm ơi, mình vừa đặt đơn hàng mã ${data.data.orderCode}:\n- Khách: ${customerName} (${phone})\n- Địa chỉ: ${address || "Lấy tại quán"}\n- Tổng tiền: ${formatVND(totalAmount)}\n- Món: ${items.map((i) => `${i.name} x${i.quantity}`).join(", ")}`;
-        window.open(`https://zalo.me/0941668405`, "_blank");
+      // If user chose Zalo or Messenger, show popup with copied message
+      if (paymentMethod === "ZALO" || paymentMethod === "MESSENGER") {
+        const socialMsg = `Trạm ơi, mình vừa đặt đơn hàng #${data.data.orderCode}:\n- Khách: ${customerName} (${phone})\n- Địa chỉ: ${address || "Nhận tại quán"}\n- Ghi chú: ${note || "Không có"}\n- Tổng tiền: ${formatVND(totalAmount)}\n- Món đã chọn:\n${items.map((i, idx) => `  ${idx + 1}. ${i.name} x${i.quantity} = ${formatVND(i.price * i.quantity)}`).join("\n")}`;
+        
+        try {
+          await navigator.clipboard.writeText(socialMsg);
+        } catch (e) {}
+
+        setSocialModal({
+          isOpen: true,
+          channel: paymentMethod === "ZALO" ? "zalo" : "messenger",
+          orderCode: data.data.orderCode,
+          messageContent: socialMsg,
+        });
+        return;
       }
 
       // Redirect to Order Detail / Tracking page
@@ -377,7 +402,7 @@ export default function CartPage() {
                       </div>
                     </label>
 
-                    {/* Zalo / Messenger */}
+                    {/* Zalo */}
                     <label
                       onClick={() => setPaymentMethod("ZALO")}
                       className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
@@ -400,6 +425,33 @@ export default function CartPage() {
                         </div>
                         <div className="text-[11px] text-muted">
                           Hệ thống tạo đơn và kết nối trực tiếp với Zalo quán
+                        </div>
+                      </div>
+                    </label>
+
+                    {/* Messenger Facebook */}
+                    <label
+                      onClick={() => setPaymentMethod("MESSENGER")}
+                      className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                        paymentMethod === "MESSENGER"
+                          ? "border-navy bg-[#FFF2D5] shadow-xs font-bold"
+                          : "border-navy/20 bg-white hover:bg-navy/5 text-navy/80"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="payment"
+                        checked={paymentMethod === "MESSENGER"}
+                        onChange={() => setPaymentMethod("MESSENGER")}
+                        className="text-maroon focus:ring-maroon"
+                      />
+                      <MessageCircle className="w-5 h-5 text-[#a855f7] shrink-0" />
+                      <div className="flex-1">
+                        <div className="text-xs font-black uppercase text-navy">
+                          Xác nhận & Gửi qua Messenger Facebook
+                        </div>
+                        <div className="text-[11px] text-muted">
+                          Sao chép đơn hàng và mở tin nhắn Messenger cho Trạm
                         </div>
                       </div>
                     </label>
@@ -432,6 +484,18 @@ export default function CartPage() {
 
         </div>
       )}
+
+      {/* Social Popup Modal for Zalo & Messenger */}
+      <SocialOrderModal
+        isOpen={socialModal.isOpen}
+        channel={socialModal.channel}
+        orderCode={socialModal.orderCode}
+        messageContent={socialModal.messageContent}
+        onClose={() => {
+          setSocialModal((prev) => ({ ...prev, isOpen: false }));
+          router.push(`/order/${socialModal.orderCode}`);
+        }}
+      />
 
     </div>
   );

@@ -87,13 +87,22 @@ export default function ContactPage() {
               </a>
 
               <a
-                href={process.env.NEXT_PUBLIC_MESSENGER_URL || "https://m.me/TramchanhDaLat"}
+                href="https://www.facebook.com/messages/t/115777478290228"
                 target="_blank"
                 rel="noreferrer"
                 className="py-2.5 px-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:brightness-110 transition-all"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Chat Facebook Messenger</span>
+              </a>
+
+              <a
+                href="https://www.facebook.com/TramchanhDaLat"
+                target="_blank"
+                rel="noreferrer"
+                className="py-2.5 px-4 bg-[#1877F2] text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:brightness-110 transition-all"
+              >
+                <span>Xem Trang Fanpage Trạm</span>
               </a>
             </div>
           </div>
