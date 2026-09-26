@@ -8,9 +8,7 @@ services:
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: webtram-db
-          property: connectionString
+        sync: false
       - key: ADMIN_USERNAME
         value: admin
       - key: ADMIN_PASSWORD
@@ -19,9 +17,3 @@ services:
         value: tram_admin_secret_key_dalat_super_secure_2026
       - key: PORT
         value: 10000
-
-databases:
-  - name: webtram-db
-    plan: free
-    databaseName: webtram
-    user: webtram_user
