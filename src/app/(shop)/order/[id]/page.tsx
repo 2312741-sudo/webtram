@@ -23,14 +23,19 @@ interface OrderPageProps {
 }
 
 export default async function OrderDetailPage({ params }: OrderPageProps) {
-  const order = await db.order.findFirst({
-    where: {
-      OR: [{ id: params.id }, { orderCode: params.id }],
-    },
-    include: {
-      items: true,
-    },
-  });
+  let order = null;
+  try {
+    order = await db.order.findFirst({
+      where: {
+        OR: [{ id: params.id }, { orderCode: params.id }],
+      },
+      include: {
+        items: true,
+      },
+    });
+  } catch (error) {
+    console.warn("Could not query DB on OrderDetailPage:", error);
+  }
 
   if (!order) {
     notFound();

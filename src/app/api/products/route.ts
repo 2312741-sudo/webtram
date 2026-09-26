@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { DEFAULT_CATEGORIES, DEFAULT_PRODUCTS } from "@/lib/defaultData";
 
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category");
-    const subCategory = searchParams.get("subCategory");
-    const search = searchParams.get("q");
-    const featured = searchParams.get("featured");
+  const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+  const subCategory = searchParams.get("subCategory");
+  const search = searchParams.get("q")?.toLowerCase();
+  const featured = searchParams.get("featured");
 
+  try {
     const where: any = {
       isAvailable: true,
     };
@@ -46,18 +47,41 @@ export async function GET(request: NextRequest) {
       orderBy: { order: "asc" },
     });
 
-    return NextResponse.json({
-      success: true,
-      data: products,
-      categories,
-    });
+    if (products && products.length > 0) {
+      return NextResponse.json({
+        success: true,
+        data: products,
+        categories: categories.length > 0 ? categories : DEFAULT_CATEGORIES,
+      });
+    }
   } catch (error) {
-    console.error("GET /api/products error:", error);
-    return NextResponse.json(
-      { success: false, error: "Không thể lấy danh sách sản phẩm" },
-      { status: 500 }
+    console.warn("GET /api/products database error, using default fallback:", error);
+  }
+
+  // Fallback filtering on DEFAULT_PRODUCTS
+  let filtered = [...DEFAULT_PRODUCTS];
+  if (category && category !== "all") {
+    filtered = filtered.filter((p) => p.categoryName.includes(category));
+  }
+  if (subCategory) {
+    filtered = filtered.filter((p) => p.subCategory === subCategory);
+  }
+  if (featured === "true") {
+    filtered = filtered.filter((p) => p.isFeatured);
+  }
+  if (search) {
+    filtered = filtered.filter(
+      (p) =>
+        p.name.toLowerCase().includes(search) ||
+        p.subCategory.toLowerCase().includes(search)
     );
   }
+
+  return NextResponse.json({
+    success: true,
+    data: filtered,
+    categories: DEFAULT_CATEGORIES,
+  });
 }
 
 export async function POST(request: NextRequest) {

@@ -15,34 +15,45 @@ import { formatVND, ORDER_STATUS_MAP } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  const [
-    totalOrders,
-    pendingOrders,
-    processingOrders,
-    completedOrders,
-    totalProducts,
-    recentOrders,
-    completedList,
-  ] = await Promise.all([
-    db.order.count(),
-    db.order.count({ where: { status: "PENDING" } }),
-    db.order.count({
-      where: { status: { in: ["CONFIRMED", "PREPARING", "DELIVERING"] } },
-    }),
-    db.order.count({ where: { status: "COMPLETED" } }),
-    db.product.count(),
-    db.order.findMany({
-      take: 6,
-      orderBy: { createdAt: "desc" },
-      include: { items: true },
-    }),
-    db.order.findMany({
-      where: { status: "COMPLETED" },
-      select: { totalPrice: true },
-    }),
-  ]);
+  let totalOrders = 0;
+  let pendingOrders = 0;
+  let processingOrders = 0;
+  let completedOrders = 0;
+  let totalProducts = 0;
+  let recentOrders: any[] = [];
+  let completedList: any[] = [];
 
-  const totalRevenue = completedList.reduce((sum, o) => sum + o.totalPrice, 0);
+  try {
+    const res = await Promise.all([
+      db.order.count(),
+      db.order.count({ where: { status: "PENDING" } }),
+      db.order.count({
+        where: { status: { in: ["CONFIRMED", "PREPARING", "DELIVERING"] } },
+      }),
+      db.order.count({ where: { status: "COMPLETED" } }),
+      db.product.count(),
+      db.order.findMany({
+        take: 6,
+        orderBy: { createdAt: "desc" },
+        include: { items: true },
+      }),
+      db.order.findMany({
+        where: { status: "COMPLETED" },
+        select: { totalPrice: true },
+      }),
+    ]);
+    totalOrders = res[0];
+    pendingOrders = res[1];
+    processingOrders = res[2];
+    completedOrders = res[3];
+    totalProducts = res[4];
+    recentOrders = res[5];
+    completedList = res[6];
+  } catch (error) {
+    console.warn("Could not query DB on AdminDashboardPage:", error);
+  }
+
+  const totalRevenue = completedList.reduce((sum, o) => sum + (o?.totalPrice || 0), 0);
 
   const stats = [
     {
@@ -181,7 +192,7 @@ export default async function AdminDashboardPage() {
                       <td className="py-3.5 px-4 font-bold">{order.customerName}</td>
                       <td className="py-3.5 px-4">{order.phone}</td>
                       <td className="py-3.5 px-4 text-xs text-muted max-w-[200px] truncate">
-                        {order.items.map((i) => `${i.name} (x${i.quantity})`).join(", ")}
+                        {order.items?.map((i: any) => `${i.name} (x${i.quantity})`).join(", ") || "-"}
                       </td>
                       <td className="py-3.5 px-4 font-black">
                         {formatVND(order.totalPrice)}

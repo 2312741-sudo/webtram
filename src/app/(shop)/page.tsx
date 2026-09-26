@@ -16,21 +16,24 @@ import ProductGrid from "@/components/ProductGrid";
 import HeroShowcase from "@/components/HeroShowcase";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import ScrollReveal from "@/components/ScrollReveal";
+import { DEFAULT_PRODUCTS } from "@/lib/defaultData";
 
 export const revalidate = 60; // ISR cache revalidation every minute
 
 async function getFeaturedProducts() {
   try {
-    return await db.product.findMany({
+    const prods = await db.product.findMany({
       where: {
         isAvailable: true,
         isFeatured: true,
       },
       take: 8,
     });
+    if (prods && prods.length > 0) return prods;
   } catch (e) {
-    return [];
+    console.warn("Could not query DB on HomePage, falling back to default:", e);
   }
+  return DEFAULT_PRODUCTS.filter((p) => p.isFeatured).slice(0, 8);
 }
 
 export default async function HomePage() {
