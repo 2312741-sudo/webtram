@@ -55,7 +55,7 @@ export default function Footer() {
                 <Clock className="w-4 h-4 text-mustard shrink-0 mt-0.5" />
                 <div>
                   <div className="font-bold">Mở cửa hàng ngày:</div>
-                  <div className="text-[#F6EFDF]/70">06:30 — 22:00 (Cả ngày lễ & Tết)</div>
+                  <div className="text-mustard font-bold">19:00 — 24:00 (Thứ 2 → Chủ Nhật)</div>
                 </div>
               </li>
               <li className="flex items-start gap-2.5">
@@ -72,9 +72,11 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-mustard shrink-0 mt-0.5" />
-                <div>
-                  <div className="font-bold">Địa chỉ:</div>
-                  <div className="text-[#F6EFDF]/70">Thành phố Đà Lạt, Lâm Đồng</div>
+                <div className="text-xs space-y-1 text-[#F6EFDF]/85">
+                  <div className="font-bold text-sm text-[#F6EFDF]">Chi nhánh tại Đà Lạt:</div>
+                  <div>📍 <strong>Trạm Chanh:</strong> 09 Hải Thượng, Cam Ly</div>
+                  <div>📍 <strong>Trạm Sữa:</strong> 44 Yersin, Xuân Hương</div>
+                  <div>📍 <strong>Trạm Bánh:</strong> 46 Yersin, Xuân Hương</div>
                 </div>
               </li>
             </ul>
