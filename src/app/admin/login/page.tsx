@@ -48,14 +48,19 @@ function LoginForm() {
         throw new Error(data.error || "Tài khoản hoặc mật khẩu không chính xác");
       }
 
-      // Successful login -> Redirect
-      router.push(callbackUrl);
-      router.refresh();
+      // Successful login -> Full page navigation ensures fresh cookie is sent
+      window.location.href = callbackUrl;
     } catch (err: any) {
       setError(err.message || "Đăng nhập thất bại");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleAutoFill = () => {
+    setUsername("admin");
+    setPassword("tramdalat2026");
+    setError("");
   };
 
   return (
@@ -122,7 +127,7 @@ function LoginForm() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Nhập mật khẩu"
+              placeholder="Nhập mật khẩu (tramdalat2026)"
               className="w-full pl-10 pr-11 py-3 rounded-xl bg-[#F6EFDF]/40 border-2 border-navy/40 focus:border-navy focus:bg-white text-sm font-bold text-navy outline-none transition-all"
             />
             <Lock className="w-4 h-4 text-navy/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -155,12 +160,19 @@ function LoginForm() {
         </div>
       </form>
 
-      {/* Credentials helper hint */}
-      <div className="bg-[#FFF2D5] rounded-2xl border border-navy/20 p-3.5 text-xs text-navy/80 space-y-1">
-        <div className="font-bold text-maroon flex items-center gap-1">
-          <span>🔑 Thông tin đăng nhập mặc định:</span>
+      {/* Credentials helper hint with Click-to-autofill */}
+      <div
+        onClick={handleAutoFill}
+        className="bg-[#FFF2D5] hover:bg-[#FFE6B3] cursor-pointer rounded-2xl border-2 border-navy/20 p-3.5 text-xs text-navy/90 space-y-1.5 transition-all shadow-xs"
+        title="Bấm vào để tự động điền tài khoản & mật khẩu"
+      >
+        <div className="font-bold text-maroon flex items-center justify-between">
+          <span className="flex items-center gap-1 font-black">🔑 Tài khoản đăng nhập mặc định:</span>
+          <span className="text-[10px] bg-maroon text-white font-black px-2 py-0.5 rounded-md shadow-xs">
+            Bấm để tự điền
+          </span>
         </div>
-        <div className="font-mono text-[11px] space-y-0.5">
+        <div className="font-mono text-[11px] space-y-0.5 pt-0.5">
           <div>• Tài khoản: <strong>admin</strong></div>
           <div>• Mật khẩu: <strong>tramdalat2026</strong></div>
         </div>

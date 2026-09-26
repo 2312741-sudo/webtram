@@ -35,11 +35,15 @@ export async function POST(request: NextRequest) {
       message: "Đăng nhập thành công",
     });
 
+    const isHttps =
+      request.url.startsWith("https://") ||
+      request.headers.get("x-forwarded-proto") === "https";
+
     response.cookies.set({
       name: SESSION_COOKIE_NAME,
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isHttps,
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60, // 7 days
