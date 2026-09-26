@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Merriweather', Georgia, serif;
+  --paper: #F6EFDF;
+  --paper-ink: #E9E1CF;
+  --ink: #1C1A2D;
+  --navy: #2D2A4A;
+  --maroon: #7E2930;
+  --maroon-d: #5C1F24;
+  --mustard: #E3A94C;
+  --teal: #1E8E87;
+  --muted: #5D5B63;
+}
+
+body {
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: 
+    radial-gradient(400px 200px at 15% -10%, rgba(227,169,76,.18), transparent 70%),
+    radial-gradient(500px 300px at 110% 0%, rgba(30,142,135,.15), transparent 60%),
+    repeating-radial-gradient(circle at 10% 10%, rgba(0,0,0,.03) 0 1px, transparent 1px 14px),
+    radial-gradient(1000px 800px at 50% 0%, var(--paper-ink), transparent 70%);
+  min-height: 100vh;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F6EFDF;
+}
+::-webkit-scrollbar-thumb {
+  background: #2D2A4A;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7E2930;
+}

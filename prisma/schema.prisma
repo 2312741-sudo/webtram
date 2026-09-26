@@ -1,0 +1,70 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  order     Int       @default(0)
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id           String      @id @default(cuid())
+  name         String
+  categoryName String      // "Trạm Chanh, Trạm Sữa" or "Trạm Chanh"
+  subCategory  String?     // "Trà Olong Trái Cây", "Bánh Lăn Nướng", v.v.
+  price        Int         // VND
+  multiPrice   String?     // "20k - 30k" hoặc "Từ 15k"
+  image        String      // "/images/products/trachanh.png"
+  description  String?
+  unit         String      @default("Ly/Phần")
+  isAvailable  Boolean     @default(true)
+  isFeatured   Boolean     @default(false)
+  categoryId   String?
+  category     Category?   @relation(fields: [categoryId], references: [id])
+  orderItems   OrderItem[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  orderCode     String      @unique
+  customerName  String
+  phone         String
+  address       String?
+  note          String?
+  totalPrice    Int
+  status        String      @default("PENDING") // PENDING, CONFIRMED, PREPARING, DELIVERING, COMPLETED, CANCELLED
+  paymentMethod String      @default("VIETQR")  // VIETQR, COD, ZALO
+  isPaid        Boolean     @default(false)
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id])
+  name        String
+  price       Int
+  quantity    Int
+  subCategory String?
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
