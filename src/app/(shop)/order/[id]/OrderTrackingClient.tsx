@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   CheckCircle2,
@@ -11,8 +11,9 @@ import {
   Phone,
   MessageCircle,
   ArrowLeft,
-  Package,
+  Sparkles,
 } from "lucide-react";
+import confetti from "canvas-confetti";
 import { formatVND, ORDER_STATUS_MAP } from "@/lib/utils";
 
 interface OrderTrackingClientProps {
@@ -25,6 +26,19 @@ export default function OrderTrackingClient({
   vietQrUrl,
 }: OrderTrackingClientProps) {
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    try {
+      confetti({
+        particleCount: 75,
+        spread: 65,
+        origin: { y: 0.55 },
+        colors: ["#7E2930", "#E3A94C", "#1E8E87", "#2D2A4A", "#F6EFDF"],
+      });
+    } catch (e) {
+      // ignore
+    }
+  }, []);
 
   const statusInfo = ORDER_STATUS_MAP[order.status] || {
     label: order.status,
@@ -66,32 +80,33 @@ export default function OrderTrackingClient({
       </div>
 
       {/* Main Order Card */}
-      <div className="bg-white rounded-3xl border-2 border-navy shadow-[0_10px_30px_rgba(45,42,74,0.08)] overflow-hidden">
+      <div className="bg-white rounded-3xl border-3 border-navy shadow-[0_12px_36px_rgba(45,42,74,0.12)] overflow-hidden">
         
         {/* Banner Status */}
         <div className="bg-[#FFF2D5] p-6 border-b-2 border-navy flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="text-xs font-black uppercase text-muted tracking-wider">
-              Mã đơn hàng
+            <div className="flex items-center gap-1.5 text-xs font-black uppercase text-maroon tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-mustard" />
+              <span>Đơn Hàng Trạm Đà Lạt</span>
             </div>
-            <div className="font-serif text-3xl font-black text-navy tracking-tight">
+            <div className="font-serif text-3xl font-black text-navy tracking-tight mt-0.5">
               #{order.orderCode}
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <span
-              className={`px-4 py-1.5 rounded-xl border-2 text-xs font-black uppercase tracking-wider ${statusInfo.bg} ${statusInfo.color}`}
+              className={`px-4 py-2 rounded-xl border-2 text-xs font-black uppercase tracking-wider ${statusInfo.bg} ${statusInfo.color}`}
             >
               {statusInfo.label}
             </span>
             {order.isPaid ? (
-              <span className="px-3 py-1.5 rounded-xl border-2 border-green-600 bg-green-100 text-green-800 text-xs font-black uppercase">
-                Đã thanh toán
+              <span className="px-3.5 py-2 rounded-xl border-2 border-green-600 bg-green-100 text-green-900 text-xs font-black uppercase shadow-xs">
+                ✓ Đã thanh toán
               </span>
             ) : (
-              <span className="px-3 py-1.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-amber-800 text-xs font-black uppercase">
-                Chưa thanh toán
+              <span className="px-3.5 py-2 rounded-xl border-2 border-amber-500 bg-amber-50 text-amber-900 text-xs font-black uppercase shadow-xs">
+                Chờ thanh toán
               </span>
             )}
           </div>
@@ -110,13 +125,15 @@ export default function OrderTrackingClient({
                   key={step.key}
                   className={`p-3 rounded-2xl border-2 transition-all ${
                     isCurrent
-                      ? "bg-maroon text-white border-navy shadow-sm font-black"
+                      ? "bg-maroon text-white border-navy shadow-sm font-black relative"
                       : isPastOrCurrent
                       ? "bg-white text-navy border-navy/40 font-bold"
                       : "bg-white/40 text-muted/60 border-dashed border-navy/20 font-medium"
                   }`}
                 >
-                  <div className="text-xs mb-1">Bước {idx + 1}</div>
+                  <div className="text-xs mb-1">
+                    {isCurrent ? "✦ Đang xử lý" : `Bước ${idx + 1}`}
+                  </div>
                   <div className="text-xs leading-tight">{step.label}</div>
                 </div>
               );
@@ -187,7 +204,7 @@ export default function OrderTrackingClient({
                 {/* Total */}
                 <div className="p-4 bg-[#FFF2D5] flex items-center justify-between text-base font-black text-navy border-t-2 border-navy/20">
                   <span>Tổng tiền thanh toán:</span>
-                  <span className="font-serif text-xl text-maroon">
+                  <span className="font-serif text-2xl text-maroon font-black">
                     {formatVND(order.totalPrice)}
                   </span>
                 </div>
@@ -244,18 +261,10 @@ export default function OrderTrackingClient({
             {/* Support hotline & messaging */}
             <div className="pt-4 flex flex-col gap-2">
               <a
-                href="tel:0941668405"
-                className="w-full py-3 bg-navy hover:bg-navy-dark text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
-              >
-                <Phone className="w-4 h-4" />
-                <span>Gọi Hotline Trạm (0941 668 405)</span>
-              </a>
-
-              <a
                 href="https://www.facebook.com/messages/t/115777478290228"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:brightness-110 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+                className="w-full py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:brightness-110 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_3px_0_#2D2A4A] active:translate-y-0.5"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Nhắn Tin Messenger Cho Trạm</span>
@@ -265,10 +274,18 @@ export default function OrderTrackingClient({
                 href="https://zalo.me/0941668405"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full py-3 bg-[#006af5] hover:brightness-110 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm"
+                className="w-full py-3 bg-[#0068FF] hover:brightness-110 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_3px_0_#2D2A4A] active:translate-y-0.5"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>Mở Zalo Xác Nhận Nhanh</span>
+                <span>Xác Nhận Qua Zalo Nhanh</span>
+              </a>
+
+              <a
+                href="tel:0941668405"
+                className="w-full py-2.5 bg-navy hover:bg-navy-dark text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>Hotline: 0941 668 405</span>
               </a>
             </div>
 

@@ -13,16 +13,31 @@ export interface CartItem {
   categoryName?: string;
 }
 
+export interface CartToastInfo {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+  timestamp: number;
+}
+
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
-  addItem: (product: Omit<CartItem, "quantity">, quantity?: number) => void;
+  toast: CartToastInfo | null;
+  addItem: (
+    product: Omit<CartItem, "quantity">,
+    quantity?: number,
+    openDrawer?: boolean
+  ) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, delta: number) => void;
   setQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   setIsOpen: (open: boolean) => void;
   toggleCart: () => void;
+  hideToast: () => void;
   getTotalCount: () => number;
   getTotalAmount: () => number;
 }
@@ -32,22 +47,29 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       isOpen: false,
-      addItem: (product, quantity = 1) => {
+      toast: null,
+      addItem: (product, quantity = 1, openDrawer = false) => {
         set((state) => {
           const existing = state.items.find((item) => item.id === product.id);
-          if (existing) {
-            return {
-              items: state.items.map((item) =>
+          const newItems = existing
+            ? state.items.map((item) =>
                 item.id === product.id
                   ? { ...item, quantity: item.quantity + quantity }
                   : item
-              ),
-              isOpen: true,
-            };
-          }
+              )
+            : [...state.items, { ...product, quantity }];
+
           return {
-            items: [...state.items, { ...product, quantity }],
-            isOpen: true,
+            items: newItems,
+            isOpen: openDrawer ? true : state.isOpen,
+            toast: {
+              id: product.id,
+              name: product.name,
+              price: product.price,
+              image: product.image,
+              quantity,
+              timestamp: Date.now(),
+            },
           };
         });
       },
@@ -83,6 +105,7 @@ export const useCartStore = create<CartStore>()(
       clearCart: () => set({ items: [] }),
       setIsOpen: (isOpen) => set({ isOpen }),
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
+      hideToast: () => set({ toast: null }),
       getTotalCount: () => {
         return get().items.reduce((total, item) => total + item.quantity, 0);
       },
